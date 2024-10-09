@@ -1,0 +1,10 @@
+<speak>
+    <voice name="pt-PT-RicardoNeural">
+        Para configurar o seu dispositivo, siga os seguintes passos: 
+        <break time="500ms"/> 
+        Primeiro, ligue o dispositivo à corrente elétrica. 
+        <break time="500ms"/> 
+        Em seguida, prima o botão de ligar durante 5 segundos.
+    </voice>
+</speak>
+

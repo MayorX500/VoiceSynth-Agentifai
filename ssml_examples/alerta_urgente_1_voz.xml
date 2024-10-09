@@ -1,0 +1,8 @@
+<speak>
+    <prosody pitch="high" rate="fast" volume="loud">
+        <voice name="pt-PT-RicardoNeural">
+            Atenção! Um erro crítico foi detectado no sistema. Por favor, contacte o suporte técnico imediatamente.
+        </voice>
+    </prosody>
+</speak>
+

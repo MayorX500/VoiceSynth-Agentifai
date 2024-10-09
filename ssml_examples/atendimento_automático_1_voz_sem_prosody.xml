@@ -1,0 +1,18 @@
+<speak>
+    <voice name="pt-PT-RaquelNeural">
+        Olá, e obrigado por ligar para a <emphasis level="moderate">Empresa XYZ</emphasis>. 
+        <break time="500ms"/> 
+        O nosso horário de atendimento é de segunda a sexta-feira, das <say-as interpret-as="time">9:00</say-as> às <say-as interpret-as="time">17:00</say-as>. 
+        <break time="300ms"/> 
+        Por favor, ouça com atenção as seguintes opções:
+        <break time="200ms"/>
+        Para o departamento de vendas, prima <emphasis level="strong">1</emphasis>.
+        <break time="200ms"/>
+        Para suporte técnico, prima <emphasis level="strong">2</emphasis>.
+        <break time="200ms"/>
+        Para faturação, prima <emphasis level="strong">3</emphasis>.
+        <break time="200ms"/>
+        Para falar com um operador, prima <emphasis level="strong">0</emphasis>.
+    </voice>
+</speak>
+

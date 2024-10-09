@@ -1,0 +1,10 @@
+<speak>
+    <prosody pitch="medium" rate="slow" volume="medium">
+        <voice name="pt-PT-RicardoNeural">
+            Por motivos de manutenção, o nosso sistema estará indisponível das <say-as interpret-as="time">22:00</say-as> às <say-as interpret-as="time">02:00</say-as> de amanhã. 
+            <break time="1000ms"/>
+            Agradecemos a sua compreensão.
+        </voice>
+    </prosody>
+</speak>
+

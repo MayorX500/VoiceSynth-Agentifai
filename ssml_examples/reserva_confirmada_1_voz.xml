@@ -1,0 +1,8 @@
+<speak>
+    <prosody pitch="medium" rate="slow" volume="medium">
+        <voice name="pt-PT-RicardoNeural">
+            A sua reserva foi confirmada. Agradecemos a sua preferência e aguardamos a sua visita no dia <say-as interpret-as="date" format="dmy">25 de outubro de 2024</say-as>, às <say-as interpret-as="time">15:00</say-as>.
+        </voice>
+    </prosody>
+</speak>
+

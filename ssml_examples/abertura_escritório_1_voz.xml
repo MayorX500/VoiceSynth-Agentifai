@@ -1,0 +1,6 @@
+<speak>
+    <voice name="pt-PT-RaquelNeural">
+        Bem-vindo ao nosso escritório. O horário de atendimento é das <say-as interpret-as="time">9:00</say-as> às <say-as interpret-as="time">18:00</say-as>, de segunda a sexta-feira.
+    </voice>
+</speak>
+

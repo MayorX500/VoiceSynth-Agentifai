@@ -1,0 +1,8 @@
+<speak>
+    <prosody pitch="low" rate="slow" volume="x-soft">
+        <voice name="pt-PT-RaquelNeural">
+            A sua chamada é importante para nós. Por favor, aguarde enquanto transferimos a sua ligação para o próximo agente disponível.
+        </voice>
+    </prosody>
+</speak>
+

@@ -1,0 +1,7 @@
+Olá, e obrigado por ligar para a Empresa XYZ. 
+O nosso horário de atendimento é de segunda a sexta-feira, das 9:00 às 17:00. 
+Por favor, ouça com atenção as seguintes opções:
+Para o departamento de vendas, prima 1.
+Para suporte técnico, prima 2.
+Para faturação, prima 3.
+Para falar com um operador, prima 0.

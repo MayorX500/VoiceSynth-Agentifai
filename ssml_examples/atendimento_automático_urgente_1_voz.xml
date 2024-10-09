@@ -1,0 +1,8 @@
+<speak>
+    <prosody pitch="high" rate="fast" volume="medium">
+        <voice name="pt-PT-FernandaNeural">
+            Obrigado por ligar. Se a sua chamada é urgente, prima <emphasis level="strong">1</emphasis> agora. Caso contrário, aguarde e será atendido em breve.
+        </voice>
+    </prosody>
+</speak>
+
