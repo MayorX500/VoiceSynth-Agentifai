@@ -1,0 +1,6 @@
+[book]
+authors = ["MayorX500"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Intlex documentation"
