@@ -1,0 +1,4 @@
+[tts]
+languages = ["en"]
+voices = ["eng_morgan_freeman.mp3"]
+
