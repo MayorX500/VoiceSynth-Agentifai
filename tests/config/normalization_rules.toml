@@ -1,0 +1,41 @@
+# config/normalization_rules.toml
+
+rule_order = ["date_conversion", "number_conversion", "abbreviations", "custom_replacements", "punctuation_handling"]
+
+[rules.number_conversion]
+enabled = true
+detect_percentage = true
+detect_years = true
+detect_ordinal = true
+locale = "en"
+handle_fractions = true
+handle_ranges = true
+handle_currency = true
+supported_currency = ["$", "€"]
+type = "cardinal"
+
+[rules.date_conversion]
+enabled = true
+formats = ["yyyy(sep)MM(sep)dd", "dd(sep)MM(sep)yyyy", "MM(sep)dd(sep)yyyy"]
+allowed_separator = ["-", "/", ".", " "]
+allow_partial_dates = true
+
+[rules.abbreviations]
+enabled = true
+mapping = { "Dr." = "Doctor", "St." = "Saint", "Mrs." = "Mistress" }
+external_abreviations = false
+abbreviation_file = "config/abbreviations.json"
+
+[rules.custom_replacements]
+enabled = true
+patterns = [
+    { pattern = "\\bCEO\\b", replacement = "Chief Executive Officer" },
+    { pattern = "\\bAI\\b", replacement = "Artificial Intelligence" }
+]
+case_sensitive = false
+use_regex_flags = true
+
+[rules.punctuation_handling]
+enabled = true
+remove = [","]
+replace_with_space = ["/"]
