@@ -47,3 +47,8 @@ datasets/
 ### Tools ###
 # Ignore all tools used in the project (external tools, etc.)
 tools/
+
+
+### Development ###
+# Ignore all development related files (IDE configs, etc.)
+development/
