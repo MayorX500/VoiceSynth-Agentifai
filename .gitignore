@@ -52,3 +52,8 @@ tools/
 ### Development ###
 # Ignore all development related files (IDE configs, etc.)
 development/
+
+
+### Large TTS Module ###
+# Ignore the large TTS module
+modules/text_to_speech_engine
