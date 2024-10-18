@@ -62,7 +62,8 @@ string normalizeDate(const string &text, const string &lang = "en") {
     //}
 
     // Check for yyyy-mm-dd format
-    regex yyyy_mm_dd_regex(R"((\d{4})-(\d{1,2})-(\d{1,2}))");
+    regex yyyy_mm_dd_regex(R"((\d{4})[.\-\/\s]+(\d{1,2})[.\-\/\s]+(\d{1,2}))");
+
     if (regex_search(date, matches, yyyy_mm_dd_regex)) {
         int monthNum = stoi(matches[2].str());
         int day = stoi(matches[3].str());
@@ -72,7 +73,7 @@ string normalizeDate(const string &text, const string &lang = "en") {
     }
 
     // Check for dd-mm-yyyy format
-    regex dd_mm_yyyy_regex(R"((\d{1,2})-(\d{1,2})-(\d{4}))");
+    regex dd_mm_yyyy_regex(R"((\d{1,2})[.\-\/\s]+(\d{1,2})[.\-\/\s]+(\d{4}))");
     if (regex_search(date, matches, dd_mm_yyyy_regex)) {
         int day = stoi(matches[1].str());
         int monthNum = stoi(matches[2].str());
@@ -82,7 +83,7 @@ string normalizeDate(const string &text, const string &lang = "en") {
     }
 
     // Check for mm-dd-yyyy format
-    regex mm_dd_yyyy_regex(R"((\d{1,2})-(\d{1,2})-(\d{4}))");
+    regex mm_dd_yyyy_regex(R"((\d{1,2})[.\-\/\s]+(\d{1,2})[.\-\/\s]+(\d{4}))");
     if (regex_search(date, matches, mm_dd_yyyy_regex)) {
         int monthNum = stoi(matches[1].str());
         int day = stoi(matches[2].str());
@@ -95,6 +96,7 @@ string normalizeDate(const string &text, const string &lang = "en") {
     return "Invalid date format";
 }
 
+/*
 int main() {
     // Example usage
     string date1 = "2023-10-14";
@@ -108,3 +110,4 @@ int main() {
     cout << normalizeDate(date4, "pt") << endl;
     return 0;
 }
+*/
