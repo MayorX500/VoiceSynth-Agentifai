@@ -1,20 +1,42 @@
-# intlex.py
-
 import torch
+import torchaudio
+from TTS.tts.configs.xtts_config import XttsConfig
+from TTS.tts.models.xtts import Xtts
 
-## This exists in the requirements.txt file, but the linting is not recognizing it
-from TTS.api import TTS # type: ignore
+# Add here the xtts_config path
+CONFIG_PATH = "model/run/training/GPT_XTTS_PT_COLAB-November-16-2024/config.json"
+# Add here the vocab file that you have used to train the model
+TOKENIZER_PATH = "model/run/training/XTTS_v2.0_original_model_files/vocab.json"
+# Add here the checkpoint that you want to do inference with
+XTTS_CHECKPOINT = "model/run/training/GPT_XTTS_PT_COLAB-November-16-2024/model.pth"
+# Add here the speaker reference
+SPEAKER_REFERENCE = "inputs/voices/ai-female-voice.wav"
 
+# output wav path
+OUTPUT_WAV_PATH = "xtts-ft.wav"
 
-# Get device
-device = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"Running on {device}")
+print("Loading model...")
+config = XttsConfig()
+config.load_json(CONFIG_PATH)
+model = Xtts.init_from_config(config)
+model.load_checkpoint(config, checkpoint_path=XTTS_CHECKPOINT, vocab_path=TOKENIZER_PATH, use_deepspeed=False)
+model.cuda()
 
-# List available 🐸TTS models
-# print(TTS().list_models())
+print("Computing speaker latents...")
+gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[SPEAKER_REFERENCE])
 
-# Init TTS with the target model name
-tts = TTS(model_name="tts_models/multilingual/multi-dataset/xtts_v2", progress_bar=False).to(device)
+print("Inference...")
+out = model.inference(
+    "Levei muito tempo a desenvolver uma voz e agora que a tenho não vou ficar calada.",
+    "pt",
+    gpt_cond_latent,
+    speaker_embedding,
+    temperature=0.75,
+    length_penalty=1.0,
+    repetition_penalty=10.0,
+    top_k=50,
+    top_p=0.85,
+    do_sample=True,
+)
+torchaudio.save(OUTPUT_WAV_PATH, torch.tensor(out["wav"]).unsqueeze(0), 24000)
 
-# Run TTS
-tts.tts_to_file(text="Susie suddenly lashes out, sending the cereal bowl flying from the counter out into kitchen space. It smashes to pieces against a side cupboard and lays silent on the floor in thick white shards. “Turn it off,” she shouts. “Yes, Miss Susie.” The grey woman on the grey beach vanishes and there …", file_path="outputs/generated.wav", speaker_wav="inputs/voices/eng_morgan_freeman.mp3", language = "en")
