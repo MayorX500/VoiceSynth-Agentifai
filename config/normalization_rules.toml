@@ -1,17 +1,26 @@
 # config/normalization_rules.toml
 
-rule_order = ["date_conversion", "number_conversion", "abbreviations", "custom_replacements", "punctuation_handling"]
+rule_order = [
+  "date_conversion",
+  "number_conversion",
+  "abbreviations",
+  "custom_replacements",
+  "punctuation_handling",
+]
+supported_languages = ["en", "pt"]
+detect_language = true
 
 [rules.number_conversion]
 enabled = true
 detect_percentage = true
 detect_years = true
 detect_ordinal = true
-locale = "en"
 handle_fractions = true
 handle_ranges = true
 handle_currency = true
-supported_currency = ["$", "€"]
+amount_aware = true
+supported_currency = ["$", "€", "£"]
+currency_map = "config/currency_map.json"
 type = "cardinal"
 
 [rules.date_conversion]
@@ -22,20 +31,15 @@ allow_partial_dates = true
 
 [rules.abbreviations]
 enabled = true
-mapping = { "Dr." = "Doctor", "St." = "Saint", "Mrs." = "Mistress" }
-external_abreviations = false
 abbreviation_file = "config/abbreviations.json"
 
 [rules.custom_replacements]
 enabled = true
-patterns = [
-    { pattern = "\\bCEO\\b", replacement = "Chief Executive Officer" },
-    { pattern = "\\bAI\\b", replacement = "Artificial Intelligence" }
-]
 case_sensitive = false
 use_regex_flags = true
+custom_replacement_file = "config/custom_replacements.json"
 
 [rules.punctuation_handling]
 enabled = false
-remove = [","]
-replace_with_space = ["/"]
+remove = []
+replace_with_space = []
