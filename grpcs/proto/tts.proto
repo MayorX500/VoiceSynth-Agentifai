@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package tts;
+
+service TTSService {
+  rpc SynthesizeStream (stream SynthesisRequest) returns (stream SynthesisResponse);
+}
+
+message SynthesisRequest {
+  string text = 1; // Texto ou parte do texto a ser sintetizado
+}
+
+message SynthesisResponse {
+  bytes audio_chunk = 1; // Fragmento do áudio gerado
+  int32 chunk_index = 2; // Índice do fragmento (para rastreamento)
+}
