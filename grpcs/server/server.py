@@ -9,25 +9,28 @@ import traceback
 class TTSService(tts_pb2_grpc.TTSServiceServicer):
     def __init__(self):
         print("Loading TTS model...")
-        # Load the Coqui TTS model
-        self.tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DCA")
+        # Use a faster TTS model if possible
+        self.tts = TTS(model_name="tts_models/en/ljspeech/fast_pitch")
         print("TTS model loaded successfully!")
         
     def SynthesizeStream(self, request_iterator, context):
         chunk_index = 0
-        block_size = 2048  # Reduced block size for smoother streaming
+        block_size = 8192  # Increased block size for efficiency
 
         for request in request_iterator:
             text = request.text
             print(f"Received text to synthesize: {text}")
 
             try:
-                # Generate audio using Coqui TTS
+                # Generate audio
                 audio = self.tts.tts(text)
-                audio = np.int16(audio * 32767)  # Convert to 16-bit PCM format
+                # Ensure the audio is in [-1.0, 1.0]
+                audio = np.clip(audio, -1.0, 1.0)
+                # Convert to 16-bit PCM
+                audio = np.int16(audio * 32767)
                 print(f"Audio generated successfully. Total samples: {len(audio)}")
 
-                # Stream the audio in chunks
+                # Stream audio in chunks
                 for i in range(0, len(audio), block_size):
                     audio_chunk = audio[i:i + block_size]
                     yield tts_pb2.SynthesisResponse(
