@@ -1,0 +1,8 @@
+{
+    "xtts_config" : "model/run/training/GPT_XTTS_Finetuned/config.json",
+    "model" : {
+        "checkpoint_path" : "model/run/training/GPT_XTTS_Finetuned/best_model.pth",
+        "vocab_path" : "model/run/training/GPT_XTTS_Finetuned/vocab.json",
+        "use_deepspeed" : false
+        }
+}
