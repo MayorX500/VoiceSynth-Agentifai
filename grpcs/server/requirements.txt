@@ -1,0 +1,5 @@
+grpcio==1.57.0
+grpcio-tools==1.57.0
+TTS==0.10.3
+numpy==1.23.0
+soundfile==0.12.1
