@@ -7,21 +7,25 @@ rule_order = [
   "custom_replacements",
   "punctuation_handling",
 ]
+
 supported_languages = ["en", "pt"]
-detect_language = true
 
 [rules.number_conversion]
 enabled = true
-detect_percentage = true
-detect_years = true
-detect_ordinal = true
-handle_fractions = true
-handle_ranges = true
-handle_currency = true
 amount_aware = true
 supported_currency = ["$", "€", "£"]
 currency_map = "config/currency_map.json"
+regex_map = "config/regex_map.json"
 type = "cardinal"
+
+[rules.number_conversion.normalize]
+numbers = true
+percentage = true
+years = false
+ordinal = true
+fractions = true
+ranges = true
+currency = true
 
 [rules.date_conversion]
 enabled = true
@@ -41,5 +45,5 @@ custom_replacement_file = "config/custom_replacements.json"
 
 [rules.punctuation_handling]
 enabled = false
-remove = []
+remove = [".", ",", ":", ";", "!", "?", "(", ")", "[", "]", "{", "}", "<", ">", "\"", "'"]
 replace_with_space = []
