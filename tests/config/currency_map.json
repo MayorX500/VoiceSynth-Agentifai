@@ -1,0 +1,30 @@
+{
+  "pt": {
+    "€": {
+      "singular": "euro",
+      "plural": "euros"
+    },
+    "$": {
+      "singular": "dólar",
+      "plural": "dólares"
+    },
+    "£": {
+      "singular": "libra",
+      "plural": "libras"
+    }
+  },
+  "en": {
+    "€": {
+      "singular": "euro",
+      "plural": "euros"
+    },
+    "$": {
+      "singular": "dollar",
+      "plural": "dollars"
+    },
+    "£": {
+      "singular": "british pound",
+      "plural": "british pounds"
+    }
+  }
+}

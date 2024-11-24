@@ -1,0 +1,16 @@
+{
+    "pt":{  
+        "percentage": {"pattern": "\\b(\\d+([.,]\\d+)?\\s*%)\\b", "natural_text":{ "singular": "por cento", "plural": "por cento" }},
+        "ordinal": {"pattern": "\\b(\\d+([.,]\\d+)?\\s*º)\\b", "natural_text":{ "singular": "primeiro", "plural": "primeiros" }},
+        "fractions": {"pattern": "\\b(\\d+([.,]\\d+)?\\s*\\d+\\/\\d+)\\b", "natural_text":{ "singular": "a dividir", "plural": "a dividir" }},
+        "ranges": {"pattern": "\\b(\\d+([.,]\\d+)?\\s*[-]\\s*\\d+([.,]\\d+)?)\\b", "natural_text":{ "singular": "a", "plural": "a" }},
+        "currency": {"pattern": "\\b(\\d+([.,]\\d+)?\\s*[€$£])\\b", "natural_text":{ "singular": "X", "plural": "X" }}
+    },
+    "en":{  
+        "percentage": {"pattern": "\\b(\\d+([.,]\\d+)?\\s*%)\\b", "natural_text":{ "singular": "percent", "plural": "percent" }},
+        "ordinal": {"pattern": "\\b(\\d+([.,]\\d+)?\\s*º)\\b", "natural_text":{ "singular": "first", "plural": "first" }},
+        "fractions": {"pattern": "\\b(\\d+([.,]\\d+)?\\s*\\d+\\/\\d+)\\b", "natural_text":{ "singular": "divided by", "plural": "divided by" }},
+        "ranges": {"pattern": "\\b(\\d+([.,]\\d+)?\\s*[-]\\s*\\d+([.,]\\d+)?)\\b", "natural_text":{ "singular": "from X to", "plural": "from X to" }},
+        "currency": {"pattern": "\\b(\\d+([.,]\\d+)?\\s*[€$£])\\b", "natural_text":{ "singular": "X", "plural": "X" }}
+    }
+}

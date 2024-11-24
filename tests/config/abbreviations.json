@@ -1,0 +1,40 @@
+{
+  "en": {
+    "Dr.": "Doctor",
+    "St.": "Saint",
+    "Mrs.": "Mistress",
+    "RSVP": "Please reply"
+  },
+  "pt": {
+    "Dr.": "Doutor",
+    "St.": "Santo",
+    "Ex.": "Exemplo",
+    "Sra.": "Senhora",
+    "Sr.": "Senhor",
+    "Dra.": "Doutora",
+    "tel.": "telefone",
+    "prof.": "professor",
+    "eng.": "engenheiro",
+    "dpto.": "departamento",
+    "adm.": "administração",
+    "v.": "veja",
+    "art.": "artigo",
+    "pág.": "página",
+    "p.e.": "por exemplo",
+    "Av.": "Avenida",
+    "ref.": "referência",
+    "aprov.": "aprovação",
+    "dist.": "distribuição",
+    "resp.": "responsável",
+    "núm.": "número",
+    "etc.": "et cetera",
+    "incl.": "incluindo",
+    "máx.": "máximo",
+    "mín.": "mínimo",
+    "obs.": "observação",
+    "qtd.": "quantidade",
+    "vol.": "volume",
+    "func.": "funcionário",
+    "média": "média"
+  }
+}
