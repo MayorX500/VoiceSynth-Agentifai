@@ -3,7 +3,7 @@
 import re
 from .base import NormalizationRule
 
-class PunctuationHandling(NormalizationRule):
+class PunctuationHandlingRule(NormalizationRule):
     def apply(self, text):
         config = self.config
         if not config.get('enabled', False):

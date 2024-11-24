@@ -4,12 +4,10 @@ import re
 import dateparser
 from .base import NormalizationRule
 from num2words import num2words
-import logging
 
-logger = logging.getLogger(__name__)
 
-class DateConversion(NormalizationRule):
-    def apply(self, text):
+class DateConversionRule(NormalizationRule):
+    def apply(self, text, language='pt'):
         config = self.config
         if not config.get('enabled', False):
             return text
@@ -19,31 +17,31 @@ class DateConversion(NormalizationRule):
         allow_partial = config.get('allow_partial_dates', False)
 
         # Handle partial dates
-        sucess = False
+        success = False
         if allow_partial:
-            # Example: "January 2020"
+            # Example: "Janeiro 2020" for Portuguese
             # Find only months and years
-            partial_pattern = r'\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\b\s+\d{4}'
+            partial_pattern = r'\b(?:January|February|March|April|May|June|July|August|September|October|November|December|Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro)\b\s+\d{4}'
             try:
                 partial_matches = re.finditer(partial_pattern, text)
             except re.error as e:
-                logger.error(f"Failed to compile partial date regex pattern: {e}")
                 partial_matches = []
 
             for match in partial_matches:
                 date_str = match.group(0)
-                parsed_date = dateparser.parse(date_str)
+                parsed_date = dateparser.parse(date_str, languages=[language])
                 if parsed_date:
                     date_word = parsed_date.strftime("%B %Y")
                     date_list = date_word.split(" ")
                     if len(date_list) == 2:
-                        date_list[1] = num2words(int(date_list[1]), to='year')
+                        date_list[1] = num2words(int(date_list[1]), to='year', lang=language)
                         date_word = " ".join(date_list)
                     text = text.replace(date_str, date_word)
-                    sucess = True
+                    success = True
 
-        if sucess:
+        if success:
             return text
+
         # Build regex patterns based on formats
         date_patterns = []
         for fmt in formats:
@@ -61,19 +59,18 @@ class DateConversion(NormalizationRule):
         try:
             matches = re.finditer(combined_pattern, text)
         except re.error as e:
-            logger.error(f"Failed to compile combined date regex pattern: {e}")
             return text
 
         for match in matches:
             date_str = match.group(0)
-            parsed_date = dateparser.parse(date_str)
+            parsed_date = dateparser.parse(date_str, languages=[language])
             if parsed_date:
                 date_word = parsed_date.strftime("%B %d, %Y")
                 date_list = date_word.split(" ")
                 if len(date_list) == 3:
-                    date_list[1] = num2words(int(date_list[1].replace(",","")), to='ordinal')
+                    date_list[1] = num2words(int(date_list[1].replace(",", "")), to='ordinal', lang=language)
                     date_list[1] = date_list[1] + ","
-                    date_list[2] = num2words(int(date_list[2]), to='year')
+                    date_list[2] = num2words(int(date_list[2]), to='year', lang=language)
                     date_word = " ".join(date_list)
                 text = text.replace(date_str, date_word)
 
