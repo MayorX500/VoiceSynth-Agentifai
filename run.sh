@@ -16,7 +16,6 @@ print_usage() {
   printf "\t  -c config_path\tConfig path (required)\n"
   printf "\t  -l\t\t\tUse prime-run for laptops with nvidia gpu\n"
   printf "\t  -g language\t\tLanguage code (optional)\n"
-  printf "\t  -v voice_path\t\tVoice path (optional)\n"
   printf "\t  -o output_path\tOutput path (optional)\n"
   printf "\t  -h\t\t\tPrint usage\n"
 }
@@ -64,9 +63,9 @@ check_python() {
 
 create_enviroment() {
 	## Create a python enviroment and install the required packages
-	python3 -m venv env
-	source env/bin/activate
-	pip install -r requirements.txt
+	python3 -m venv .env
+	source .env/bin/activate
+	pip install -r enviroments/dev_requirements.txt
 }
 
 
@@ -128,10 +127,10 @@ main() {
 	download_files
 
 	## Check if the python enviroment exists
-	if [ ! -d "env" ]; then
+	if [ ! -d ".env" ]; then
 		create_enviroment
 	else
-		source env/bin/activate
+		source .env/bin/activate
 	fi
 
 	## Check if gpus are available

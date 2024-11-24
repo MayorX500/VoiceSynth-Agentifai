@@ -33,5 +33,5 @@ mkdir -p output
 
 for sentence in "${sentences[@]}"; do
         echo "Processing sentence: $sentence"
-        sh run.sh -t "$sentence" -c "config/intlex_config.json" -v "inputs/voices/ai-female-voice-24k.wav" -o "output/$sentence.wav"
+        sh run.sh -t "$sentence" -c "config/intlex_config.json" -o "output/$sentence.wav"
 done
