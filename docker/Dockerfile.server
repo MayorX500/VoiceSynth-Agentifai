@@ -1,0 +1,34 @@
+# Use a Python base image
+FROM python:3.12-slim
+
+# Set environment variables to optimize Python
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Set working directory
+WORKDIR /app
+
+# Copy the server-specific requirements and install dependencies
+COPY ../enviroments/server_requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Copy server code
+COPY ../app_server /app/app_server
+
+COPY ../config /app/config
+
+# Copy shared gRPC proto files if needed
+COPY ../grpcs/proto /app/proto
+
+COPY ../model /app/model
+
+COPY ../modules /app/modules
+
+COPY ../inputs /app/inputs
+
+
+# Expose the gRPC server port
+EXPOSE 50051
+
+# Set the default command to run the server
+CMD ["python", "/app/app_server/__main__.py"]
