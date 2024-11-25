@@ -1,0 +1,8 @@
+<speak>
+    Olá e seja bem vindo ao Sistema de Casa Inteligente.
+    A temperatura atual é de <say-as interpret-as="cardinal">22</say-as> graus Celsius.
+    Um lembrete rápido:
+    <break time="500ms"/>
+    Tenha um excelente dia!
+</speak>
+ 
