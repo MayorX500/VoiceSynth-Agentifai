@@ -17,9 +17,6 @@ class Model():
     config: dict[str, str]
     model: Xtts
     xtts_config: XttsConfig
-    base_voice: str
-    gpt_cond_latent: None
-    speaker_embedding: None
 
     def __init__(self, config_file: str):
         print("Loading model...")
@@ -28,8 +25,8 @@ class Model():
         self.xtts_config = XttsConfig()
         self.xtts_config.load_json(self.config.get("xtts_config", None))
         self.model = Xtts.init_from_config(self.xtts_config)
-        self.base_voice = self.config.get("base_voice", None)
         conf_file = self.config.get("model", None)
+        print("Tokenizer initialized:", self.model.tokenizer is not None)
         if conf_file is not None:
             self.model.load_checkpoint(self.xtts_config, **conf_file)
             if torch.cuda.is_available():
@@ -41,21 +38,27 @@ class Model():
             print("No checkpoint file provided")
             exit(1)
 
-    def get_conditioning_latents(self):
+    def get_conditioning_latents(self,audio_path = None):
+        if audio_path is None:
+            return None, None
         print("Computing speaker latents...")
-        self.gpt_cond_latent, self.speaker_embedding = self.model.get_conditioning_latents(audio_path=[self.base_voice])
-        return self.gpt_cond_latent, self.speaker_embedding
+        gpt_cond_latent,speaker_embedding = self.model.get_conditioning_latents(audio_path=[audio_path])
+        return gpt_cond_latent,speaker_embedding
 
-    def inference(self, text, lang = "pt", gpt_cond_latent=None, speaker_embedding=None, **kwargs):
+    def inference(self, text, lang = "pt", gpt_cond_latent=None, speaker_embedding=None, audio_path = None, **kwargs):
         # Use default values from the object if they are not provided in the method call
-        if gpt_cond_latent is None:
-            gpt_cond_latent = self.gpt_cond_latent
-        if speaker_embedding is None:
-            speaker_embedding = self.speaker_embedding
+        if gpt_cond_latent is None or speaker_embedding is None:
+            if audio_path is not None:
+                print("Getting conditioning latents from audio file...")
+                gpt_cond_latent, speaker_embedding = self.get_conditioning_latents(audio_path)
+            else:
+                print("Getting default conditioning latents...")
+                gpt_cond_latent, speaker_embedding = self.get_conditioning_latents(self.config.get("audio_path", {"pt":"inputs/voices/input_voice.wav","en":"inputs/voices/eng_morgan_freeman.wav"}).get(lang))
         if kwargs is None:
             kwargs = {"length_penalty":1.0,"repetition_penalty":2.5, "top_k":20, "top_p":0.95, "do_sample":True,"temperature":0.3}
         else:
             kwargs = {**{"length_penalty":1.0,"repetition_penalty":2.5, "top_k":20, "top_p":0.95, "do_sample":True,"temperature":0.3}, **kwargs}
+        print(f"Function arguments: text={text}, lang={lang}, gpt_cond_latent={gpt_cond_latent}, speaker_embedding={speaker_embedding}, audio_path={audio_path}, kwargs={kwargs}")
         print("Generating audio...")
         return self.model.inference(text, lang, gpt_cond_latent, speaker_embedding, **kwargs)
     
@@ -63,9 +66,11 @@ class Model():
         print("Saving audio...")
         torchaudio.save(path, torch.tensor(wav).unsqueeze(0), 24000)
 
-    def generate_audio(self, text, lang = "pt", **kwargs):
+    def generate_audio(self, text, voice_path = None, lang = "pt", **kwargs):
         # TODO: finish implementing text normalization
-        wav = self.inference(text, lang, self.gpt_cond_latent, self.speaker_embedding, **kwargs)
+        print(f"Function arguments: text={text}, lang={lang}, voice_path={voice_path}, kwargs={kwargs}")
+        gpt_cond_latent, speaker_embedding = self.get_conditioning_latents(voice_path)
+        wav = self.inference(text, lang, gpt_cond_latent, speaker_embedding, audio_path=voice_path, **kwargs)
         return wav["wav"]
 
 def main(args):

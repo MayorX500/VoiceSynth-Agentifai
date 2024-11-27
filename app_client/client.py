@@ -23,7 +23,7 @@ def save_audio_to_file(audio_data, output_dir, filename, sample_rate=22050, debu
     except Exception as e:
         print(f"Error saving audio: {e}")
 
-def stream_audio_to_file(stub, text, pid, request_counter, sample_rate=22050,output_dir=None, filename=None, debug=False):
+def stream_audio_to_file(stub, text, pid, request_counter, user_token, sample_rate=22050,output_dir=None, filename=None, debug=False):
     """Receives streamed audio from the gRPC server and saves it to a file."""
     request = tts_pb2.SynthesisRequest(text=text)
     request_stream = iter([request])  # Convert the single request into an iterator
@@ -38,7 +38,7 @@ def stream_audio_to_file(stub, text, pid, request_counter, sample_rate=22050,out
     audio_data = bytearray()
 
     try:
-        metadata = [("session_id", str(pid))]  # Send PID as session metadata
+        metadata = [("session_id", str(pid)), ("user_token", user_token)]  # Send user_token as session metadata
         response_stream = stub.SynthesizeStream(request_stream, metadata=metadata)
 
         for response in response_stream:
@@ -55,7 +55,13 @@ def stream_audio_to_file(stub, text, pid, request_counter, sample_rate=22050,out
 
 def main(args):
     pid = os.getpid()  # Get the process ID
-    request_counter = itertools.count(random.randint(1,100000000))  # Counter for audio requests (starts from 1)
+    request_counter = itertools.count(random.randint(1, 100000000))  # Counter for audio requests (starts from 1)
+
+    user_token = args.user_token  # Get the user_token from command-line arguments
+
+    if not user_token:
+        print("Error: user_token is required.")
+        return
 
     with grpc.insecure_channel(f"{args.ipadd}:50051") as channel:
         stub = tts_pb2_grpc.TTSServiceStub(channel)
@@ -64,7 +70,7 @@ def main(args):
             if text.lower() == "exit":
                 break
             request_num = next(request_counter)  # Get the next request number
-            stream_audio_to_file(stub, text, pid, request_num, debug=args.debug)
+            stream_audio_to_file(stub, text, pid, request_num, user_token, debug=args.debug)
 
 if __name__ == "__main__":
     parser = ap.ArgumentParser()
