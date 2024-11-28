@@ -1,0 +1,74 @@
+### WIP ###
+# This file is used to build the docker containers for the frontend, client, api, proxy, and server.
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    image: tts-agentifai:frontend
+    container_name: frontend_container
+    networks:
+      - tts_network
+    depends_on:
+      - api
+    environment:
+      - API_PORT=${API_PORT}
+      - API_IPADD = ${API_IP} # API container name
+
+  client:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.client
+    image: tts-agentifai:client
+    container_name: client_container
+    networks:
+      - tts_network
+    depends_on:
+      - proxy
+    environment:
+      - CONN_PORT=${PROXY_PORT}
+      - IPADD = ${PROXY_IP} # proxy container name
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    image: tts-agentifai:api
+    container_name: api_container
+    networks:
+      - tts_network
+    depends_on:
+      - proxy
+    environment:
+      - CONN_PORT=${PROXY_PORT}
+      - IPADD = ${PROXY_IP} # proxy container name
+
+  proxy:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.proxy
+    image: tts-agentifai:proxy
+    container_name: proxy_container
+    networks:
+      - tts_network
+    depends_on:
+      - server
+    environment:
+      - PROXY_PORT=${PROXY_PORT}
+
+  server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.server
+    image: tts-agentifai:server
+    container_name: server_container
+    networks:
+      - tts_network
+    environment:
+      - SERVER_PORT=${SERVER_PORT}
+
+networks:
+  tts_network:
+    driver: bridge
