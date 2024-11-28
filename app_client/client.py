@@ -66,10 +66,60 @@ def stream_audio_to_file(stub, text, pid, request_counter, user_token, sample_ra
     # Save the received audio data to the appropriate directory and file
     save_audio_to_file(audio_data, output_dir=output_dir, filename=filename, sample_rate=sample_rate, debug=debug)
 
-def main(args):
+def create_user(stub):
+    """Create a new user."""
+    user_token = input("Enter user token: ")
+    username = input("Enter username: ")
+    request = tts_pb2.AddUserRequest(user_token=user_token, username=username)
+    response = stub.AddUser(request)
+    print(response.status)
+def remove_user(stub):
+    """Remove an existing user."""
+    user_token = input("Enter user token: ")
+    request = tts_pb2.RemoveUserRequest(user_token=user_token)
+    response = stub.RemoveUser(request)
+    print(response.status)
+def add_audio(stub):
+    """Add a new audio to the server."""
+    file_path = input("Enter the path of the audio file: ")
+    if not os.path.exists(file_path):
+        print("Error: File does not exist.")
+        return
+    
+    with open(file_path, "rb") as audio_file:
+        audio_data = audio_file.read()
+    request = tts_pb2.AddVoiceRequest(file_path=os.path.basename(file_path), audio_data=audio_data)
+    response = stub.AddVoice(request)
+    print(response.status)
+def remove_audio(stub):
+    """Remove an audio from the server."""
+    voice_id = int(input("Enter the voice ID to remove: "))
+    request = tts_pb2.RemoveVoiceRequest(voice_id=voice_id)
+    response = stub.RemoveVoice(request)
+    print(response.status)
+def associate_audio(stub):
+    """Associate an audio with a user."""
+    user_token = input("Enter user token: ")
+    voice_id = int(input("Enter voice ID to associate: "))
+    request = tts_pb2.AssociateUserVoiceRequest(user_token=user_token, voice_id=voice_id)
+    response = stub.AssociateUserVoice(request)
+    print(response.status)
+def disassociate_audio(stub):
+    """Disassociate an audio from a user."""
+    user_token = input("Enter user token: ")
+    voice_id = int(input("Enter voice ID to disassociate: "))
+    request = tts_pb2.RemoveUserVoiceAssociationRequest(user_token=user_token, voice_id=voice_id)
+    response = stub.RemoveUserVoiceAssociation(request)
+    print(response.status)
+def synthesize_text(stub, user_token, debug=False):
+    """Generate audio from text."""
+    text = input("Enter text to synthesize: ")
     pid = os.getpid()  # Get the process ID
-    request_counter = itertools.count(random.randint(1, 100000000))  # Counter for audio requests (starts from 1)
+    request_counter = itertools.count(random.randint(1, 100000000))  # Counter for audio requests
+    request_num = next(request_counter)
+    stream_audio_to_file(stub, text, pid, request_num, user_token, debug=debug)
 
+def main(args):
     user_token = args.user_token  # Get the user_token from command-line arguments
 
     if not user_token:
@@ -79,17 +129,42 @@ def main(args):
     with grpc.insecure_channel(f"{args.ipadd}:{CONN_PORT}") as channel:
         stub = tts_pb2_grpc.TTSServiceStub(channel)
         while True:
-            text = input("Enter text to synthesize (or type 'exit' to quit): ")
-            start_time = time.time()
-            if text.lower() == "exit":
+            print("\nOptions:")
+            print("1. Create User")
+            print("2. Remove User")
+            print("3. Add Audio")
+            print("4. Remove Audio")
+            print("5. Associate Audio with User")
+            print("6. Disassociate Audio from User")
+            print("7. Synthesize Audio")
+            print("8. Exit")
+            choice = input("Select an option (1-8): ")
+            if choice == "1":
+                create_user(stub)
+            elif choice == "2":
+                remove_user(stub)
+            elif choice == "3":
+                add_audio(stub)
+            elif choice == "4":
+                remove_audio(stub)
+            elif choice == "5":
+                associate_audio(stub)
+            elif choice == "6":
+                disassociate_audio(stub)
+            elif choice == "7":
+                user_token = input("Enter user token: ")
+                synthesize_text(stub, user_token, debug=args.debug)
+            elif choice == "8":
+                print("Exiting...")
                 break
-            request_num = next(request_counter)  # Get the next request number
-            stream_audio_to_file(stub, text, pid, request_num, user_token, debug=args.debug)
-            print(f"Time taken: {time.time() - start_time:.2f} seconds")
+            else:
+                print("Invalid option. Please try again.")
+
 
 if __name__ == "__main__":
     parser = ap.ArgumentParser()
-    parser.add_argument("ipadd", type=str, help="Ip address of the server")
-    parser.add_argument("--debug","-d", action="store_true", help="Enable debug mode", default=False)
+    parser.add_argument("ipadd", type=str, help="IP address of the server")
+    parser.add_argument("user_token", type=str, help="User token for authentication")
+    parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode", default=False)
     args = parser.parse_args()
     main(args)

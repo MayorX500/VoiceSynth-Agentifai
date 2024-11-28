@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'g
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'db')))  # Add the db directory to the system path
 
 
+import json
 from concurrent import futures
 import grpc
 from grpcs import tts_pb2
@@ -35,6 +36,10 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
     def __init__(self,args):
         self.debug = args.debug
         self.db_session = Session()  # Initialize the session here
+        with open(args.configuration_file, 'r') as f:
+            self.config = json.load(f)
+        self.storage_dir = self.config.get("storage_directory", "inputs/voices")
+        os.makedirs(self.storage_dir, exist_ok=True)  # Ensure storage directory exists
         if self.debug:
             print("Loading TTS model...")
         self.tts = Model(args.configuration_file)
@@ -113,6 +118,105 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
             traceback.print_exc()
             context.set_details(str(e))
             context.set_code(grpc.StatusCode.INTERNAL)
+
+    def AddUser(self, request, context):
+        try:
+            new_user = models.User(user_token=request.user_token, username=request.username)
+            self.db_session.add(new_user)
+            self.db_session.commit()
+            return tts_pb2.AddUserResponse(status="User added successfully")
+        except Exception as e:
+            self.db_session.rollback()
+            context.set_details(f"Error adding user: {e}")
+            context.set_code(grpc.StatusCode.INTERNAL)
+            return tts_pb2.AddUserResponse(status="Error adding user")
+    
+    def RemoveUser(self, request, context):
+        try:
+            user = self.db_session.query(models.User).filter_by(user_token=request.user_token).first()
+            if not user:
+                return tts_pb2.RemoveUserResponse(status="User not found")
+            
+            self.db_session.delete(user)
+            self.db_session.commit()
+            return tts_pb2.RemoveUserResponse(status="User removed successfully")
+        except Exception as e:
+            self.db_session.rollback()
+            return tts_pb2.RemoveUserResponse(status=f"Error removing user: {e}")
+    
+    def AddVoice(self, request_iterator, context):
+        try:
+            voice_name = None
+            audio_data = bytearray()
+            # Process the stream to collect the voice name and audio data
+            for request in request_iterator:
+                if not voice_name:
+                    voice_name = request.voice_name  # The first message should contain the voice name
+                audio_data.extend(request.audio_chunk)
+            if not voice_name or not audio_data:
+                context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+                context.set_details("Voice name or audio data not provided.")
+                return tts_pb2.AddVoiceResponse(status="Failed")
+            # Save the audio file
+            file_name = f"{voice_name.replace(' ', '_')}.wav"
+            file_path = os.path.join(self.storage_dir, file_name)
+            with open(file_path, 'wb') as f:
+                f.write(audio_data)
+            # Store the voice in the database
+            new_voice = models.Voice(voice_name=voice_name, file_path=file_path)
+            self.db_session.add(new_voice)
+            self.db_session.commit()
+            return tts_pb2.AddVoiceResponse(status="Success")
+        except Exception as e:
+            self.db_session.rollback()
+            print(f"Error adding voice: {e}")
+            traceback.print_exc()
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(str(e))
+            return tts_pb2.AddVoiceResponse(status="Failed")
+    def RemoveVoice(self, request, context):
+        try:
+            voice = self.db_session.query(models.Voice).filter_by(id=request.voice_id).first()
+            if not voice:
+                return tts_pb2.RemoveVoiceResponse(status="Voice not found")
+            
+            self.db_session.delete(voice)
+            self.db_session.commit()
+            return tts_pb2.RemoveVoiceResponse(status="Voice removed successfully")
+        except Exception as e:
+            self.db_session.rollback()
+            return tts_pb2.RemoveVoiceResponse(status=f"Error removing voice: {e}")
+    
+    def AssociateUserVoice(self, request, context):
+        try:
+            user = self.db_session.query(models.User).filter_by(user_token=request.user_token).first()
+            voice = self.db_session.query(models.Voice).filter_by(id=request.voice_id).first()
+            
+            if not user or not voice:
+                return tts_pb2.AssociateUserVoiceResponse(status="User or Voice not found")
+            
+            user.voices.append(voice)
+            self.db_session.commit()
+            return tts_pb2.AssociateUserVoiceResponse(status="Association created successfully")
+        except Exception as e:
+            self.db_session.rollback()
+            return tts_pb2.AssociateUserVoiceResponse(status=f"Error associating user and voice: {e}")
+    
+    def RemoveUserVoiceAssociation(self, request, context):
+        try:
+            user = self.db_session.query(models.User).filter_by(user_token=request.user_token).first()
+            voice = self.db_session.query(models.Voice).filter_by(id=request.voice_id).first()
+            
+            if not user or not voice or voice not in user.voices:
+                return tts_pb2.RemoveUserVoiceAssociationResponse(status="Association not found")
+            
+            user.voices.remove(voice)
+            self.db_session.commit()
+            return tts_pb2.RemoveUserVoiceAssociationResponse(status="Association removed successfully")
+        except Exception as e:
+            self.db_session.rollback()
+            return tts_pb2.RemoveUserVoiceAssociationResponse(status=f"Error removing association: {e}")
+
 
 def serve(args):
     # Start the gRPC server

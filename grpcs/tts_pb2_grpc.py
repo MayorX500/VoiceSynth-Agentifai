@@ -5,7 +5,7 @@ import warnings
 
 import tts_pb2 as tts__pb2
 
-GRPC_GENERATED_VERSION = '1.68.0'
+GRPC_GENERATED_VERSION = '1.67.1'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -39,12 +39,78 @@ class TTSServiceStub(object):
                 request_serializer=tts__pb2.SynthesisRequest.SerializeToString,
                 response_deserializer=tts__pb2.SynthesisResponse.FromString,
                 _registered_method=True)
+        self.AddUser = channel.unary_unary(
+                '/tts.TTSService/AddUser',
+                request_serializer=tts__pb2.AddUserRequest.SerializeToString,
+                response_deserializer=tts__pb2.AddUserResponse.FromString,
+                _registered_method=True)
+        self.RemoveUser = channel.unary_unary(
+                '/tts.TTSService/RemoveUser',
+                request_serializer=tts__pb2.RemoveUserRequest.SerializeToString,
+                response_deserializer=tts__pb2.RemoveUserResponse.FromString,
+                _registered_method=True)
+        self.AddVoice = channel.unary_unary(
+                '/tts.TTSService/AddVoice',
+                request_serializer=tts__pb2.AddVoiceRequest.SerializeToString,
+                response_deserializer=tts__pb2.AddVoiceResponse.FromString,
+                _registered_method=True)
+        self.RemoveVoice = channel.unary_unary(
+                '/tts.TTSService/RemoveVoice',
+                request_serializer=tts__pb2.RemoveVoiceRequest.SerializeToString,
+                response_deserializer=tts__pb2.RemoveVoiceResponse.FromString,
+                _registered_method=True)
+        self.AssociateUserVoice = channel.unary_unary(
+                '/tts.TTSService/AssociateUserVoice',
+                request_serializer=tts__pb2.AssociateUserVoiceRequest.SerializeToString,
+                response_deserializer=tts__pb2.AssociateUserVoiceResponse.FromString,
+                _registered_method=True)
+        self.RemoveUserVoiceAssociation = channel.unary_unary(
+                '/tts.TTSService/RemoveUserVoiceAssociation',
+                request_serializer=tts__pb2.RemoveUserVoiceAssociationRequest.SerializeToString,
+                response_deserializer=tts__pb2.RemoveUserVoiceAssociationResponse.FromString,
+                _registered_method=True)
 
 
 class TTSServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def SynthesizeStream(self, request_iterator, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AddUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def RemoveUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AddVoice(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def RemoveVoice(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AssociateUserVoice(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def RemoveUserVoiceAssociation(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -57,6 +123,36 @@ def add_TTSServiceServicer_to_server(servicer, server):
                     servicer.SynthesizeStream,
                     request_deserializer=tts__pb2.SynthesisRequest.FromString,
                     response_serializer=tts__pb2.SynthesisResponse.SerializeToString,
+            ),
+            'AddUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddUser,
+                    request_deserializer=tts__pb2.AddUserRequest.FromString,
+                    response_serializer=tts__pb2.AddUserResponse.SerializeToString,
+            ),
+            'RemoveUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.RemoveUser,
+                    request_deserializer=tts__pb2.RemoveUserRequest.FromString,
+                    response_serializer=tts__pb2.RemoveUserResponse.SerializeToString,
+            ),
+            'AddVoice': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddVoice,
+                    request_deserializer=tts__pb2.AddVoiceRequest.FromString,
+                    response_serializer=tts__pb2.AddVoiceResponse.SerializeToString,
+            ),
+            'RemoveVoice': grpc.unary_unary_rpc_method_handler(
+                    servicer.RemoveVoice,
+                    request_deserializer=tts__pb2.RemoveVoiceRequest.FromString,
+                    response_serializer=tts__pb2.RemoveVoiceResponse.SerializeToString,
+            ),
+            'AssociateUserVoice': grpc.unary_unary_rpc_method_handler(
+                    servicer.AssociateUserVoice,
+                    request_deserializer=tts__pb2.AssociateUserVoiceRequest.FromString,
+                    response_serializer=tts__pb2.AssociateUserVoiceResponse.SerializeToString,
+            ),
+            'RemoveUserVoiceAssociation': grpc.unary_unary_rpc_method_handler(
+                    servicer.RemoveUserVoiceAssociation,
+                    request_deserializer=tts__pb2.RemoveUserVoiceAssociationRequest.FromString,
+                    response_serializer=tts__pb2.RemoveUserVoiceAssociationResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -86,6 +182,168 @@ class TTSService(object):
             '/tts.TTSService/SynthesizeStream',
             tts__pb2.SynthesisRequest.SerializeToString,
             tts__pb2.SynthesisResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AddUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/tts.TTSService/AddUser',
+            tts__pb2.AddUserRequest.SerializeToString,
+            tts__pb2.AddUserResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def RemoveUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/tts.TTSService/RemoveUser',
+            tts__pb2.RemoveUserRequest.SerializeToString,
+            tts__pb2.RemoveUserResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AddVoice(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/tts.TTSService/AddVoice',
+            tts__pb2.AddVoiceRequest.SerializeToString,
+            tts__pb2.AddVoiceResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def RemoveVoice(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/tts.TTSService/RemoveVoice',
+            tts__pb2.RemoveVoiceRequest.SerializeToString,
+            tts__pb2.RemoveVoiceResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AssociateUserVoice(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/tts.TTSService/AssociateUserVoice',
+            tts__pb2.AssociateUserVoiceRequest.SerializeToString,
+            tts__pb2.AssociateUserVoiceResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def RemoveUserVoiceAssociation(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/tts.TTSService/RemoveUserVoiceAssociation',
+            tts__pb2.RemoveUserVoiceAssociationRequest.SerializeToString,
+            tts__pb2.RemoveUserVoiceAssociationResponse.FromString,
             options,
             channel_credentials,
             insecure,
