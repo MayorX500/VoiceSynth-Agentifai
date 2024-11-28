@@ -17,6 +17,7 @@ class Model():
     config: dict[str, str]
     model: Xtts
     xtts_config: XttsConfig
+    default_kwargs = {"length_penalty":1.0,"repetition_penalty":2.5, "top_k":20, "top_p":0.95, "do_sample":True,"temperature":0.3}
 
     def __init__(self, config_file: str):
         print("Loading model...")
@@ -26,7 +27,6 @@ class Model():
         self.xtts_config.load_json(self.config.get("xtts_config", None))
         self.model = Xtts.init_from_config(self.xtts_config)
         conf_file = self.config.get("model", None)
-        print("Tokenizer initialized:", self.model.tokenizer is not None)
         if conf_file is not None:
             self.model.load_checkpoint(self.xtts_config, **conf_file)
             if torch.cuda.is_available():
@@ -55,10 +55,11 @@ class Model():
                 print("Getting default conditioning latents...")
                 gpt_cond_latent, speaker_embedding = self.get_conditioning_latents(self.config.get("audio_path", {"pt":"inputs/voices/input_voice.wav","en":"inputs/voices/eng_morgan_freeman.wav"}).get(lang))
         if kwargs is None:
-            kwargs = {"length_penalty":1.0,"repetition_penalty":2.5, "top_k":20, "top_p":0.95, "do_sample":True,"temperature":0.3}
+            kwargs = self.default_kwargs
         else:
-            kwargs = {**{"length_penalty":1.0,"repetition_penalty":2.5, "top_k":20, "top_p":0.95, "do_sample":True,"temperature":0.3}, **kwargs}
-        print(f"Function arguments: text={text}, lang={lang}, gpt_cond_latent={gpt_cond_latent}, speaker_embedding={speaker_embedding}, audio_path={audio_path}, kwargs={kwargs}")
+            ## update default values with the provided ones overriding the default ones if necessary
+            
+            kwargs = {**self.default_kwargs, **kwargs}
         print("Generating audio...")
         return self.model.inference(text, lang, gpt_cond_latent, speaker_embedding, **kwargs)
     
@@ -68,8 +69,13 @@ class Model():
 
     def generate_audio(self, text, voice_path = None, lang = "pt", **kwargs):
         # TODO: finish implementing text normalization
-        print(f"Function arguments: text={text}, lang={lang}, voice_path={voice_path}, kwargs={kwargs}")
-        gpt_cond_latent, speaker_embedding = self.get_conditioning_latents(voice_path)
+        if "gpt_cond_latent" in kwargs.keys() and "speaker_embedding" in kwargs.keys():
+            gpt_cond_latent = kwargs["gpt_cond_latent"]
+            speaker_embedding = kwargs["speaker_embedding"]
+            kwargs.pop("gpt_cond_latent")
+            kwargs.pop("speaker_embedding")
+        else:
+            gpt_cond_latent, speaker_embedding = self.get_conditioning_latents(voice_path)
         wav = self.inference(text, lang, gpt_cond_latent, speaker_embedding, audio_path=voice_path, **kwargs)
         return wav["wav"]
 

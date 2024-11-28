@@ -5,7 +5,7 @@
        "pt":"inputs/voices/input_voice.wav",
        "en":"inputs/voices/eng_morgan_freeman.wav"
     },
-    "_comment_audio_path":"as vozes default de entrada para a conversão, o campo é um dicionário com as chaves sendo os idiomas das vozes e os valores sendo os caminhos para os ficheiros de áudio",
+    "_comment_audio_path":"Vozes default de entrada para a conversão, o campo é um dicionário com as chaves sendo os idiomas das vozes e os valores sendo os caminhos para os ficheiros de áudio",
     "xtts_config":"model/run/training/GPT_XTTS_Finetuned/config.json",
     "_comment_xtts_config":"Caminho para o ficheiro de configuração do XTTS a ser usado pelo modelo treinado",
     "model":{

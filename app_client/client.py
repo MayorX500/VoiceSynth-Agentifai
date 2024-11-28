@@ -1,7 +1,20 @@
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # Add the parent directory to the system path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'grpcs'))) # Add the grpcs directory to the system path
+
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from a .env file
+## Add environment variables like port, etc.
+CONN_PORT = os.getenv("CONN_PORT")
+if not CONN_PORT:
+    CONN_PORT = 50052 # Default port if not specified in the environment variables
+
+import time
 import grpc
 import wave
-import tts_pb2
-import tts_pb2_grpc
+from grpcs import tts_pb2
+from grpcs import tts_pb2_grpc
 import os
 import os.path
 import itertools
@@ -63,14 +76,16 @@ def main(args):
         print("Error: user_token is required.")
         return
 
-    with grpc.insecure_channel(f"{args.ipadd}:50051") as channel:
+    with grpc.insecure_channel(f"{args.ipadd}:{CONN_PORT}") as channel:
         stub = tts_pb2_grpc.TTSServiceStub(channel)
         while True:
             text = input("Enter text to synthesize (or type 'exit' to quit): ")
+            start_time = time.time()
             if text.lower() == "exit":
                 break
             request_num = next(request_counter)  # Get the next request number
             stream_audio_to_file(stub, text, pid, request_num, user_token, debug=args.debug)
+            print(f"Time taken: {time.time() - start_time:.2f} seconds")
 
 if __name__ == "__main__":
     parser = ap.ArgumentParser()
