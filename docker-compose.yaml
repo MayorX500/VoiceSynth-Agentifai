@@ -57,6 +57,19 @@ services:
       - server
     environment:
       - PROXY_PORT=${PROXY_PORT}
+  
+  normalizer:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.normalizer
+    image: tts-agentifai:normalizer
+    container_name: normalizer_container
+    networks:
+      - tts_network
+    depends_on:
+      - server
+    environment:
+      - NORMALIZER_PORT=${NORMALIZER_PORT}
 
   server:
     build:
