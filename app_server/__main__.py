@@ -8,8 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'd
 import json
 from concurrent import futures
 import grpc
-from grpcs import tts_pb2
-from grpcs import tts_pb2_grpc
+from grpcs import tts_pb2, tts_pb2_grpc, normalizer_pb2, normalizer_pb2_grpc
 from intlex import Model
 import numpy as np
 import traceback
@@ -25,6 +24,13 @@ SERVER_PORT = os.getenv("SERVER_PORT")
 if SERVER_PORT is None:
     SERVER_PORT = 50051 # Default port if not specified as an environment variable
 
+NORMALIZER_IPADDRESS = os.getenv("NORMALIZER_IPADDRESS")
+if NORMALIZER_IPADDRESS is None:
+    NORMALIZER_IPADDRESS = "localhost" # Default port if not specified as an environment variable
+
+NORMALIZER_PORT = os.getenv("NORMALIZER_PORT")
+if NORMALIZER_PORT is None:
+    NORMALIZER_PORT = 50053 # Default port if not specified as an environment variable
 
 from db import models
 
@@ -89,12 +95,22 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
             voice_config = self.get_voice(user_token)
             if self.debug:
                 print(f"Loaded voice configuration for user_token {user_token}: {voice_config}")
+            
+            # Establish a connection to the normalizer service
+            with grpc.insecure_channel(f'{NORMALIZER_IPADDRESS}:{NORMALIZER_PORT}') as channel:
+                normalizer_stub = normalizer_pb2_grpc.NormalizerServiceStub(channel)
 
-            for request in request_iterator:
-                if not context.is_active():
-                    break
+                # Normalize each text segment
+                for request in request_iterator:
+                    if not context.is_active():
+                        break
 
-                text = request.text
+                    # Send text to the normalizer
+                    normalize_request = normalizer_pb2.NormalizeRequest(text=request.text)
+                    normalize_response = normalizer_stub.Normalize(normalize_request)
+                    normalized_text = normalize_response.normalized_text
+
+                text = normalized_text
                 if self.debug:
                     print(f"Client {user_token} requested synthesis for: {text}")
 

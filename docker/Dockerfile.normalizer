@@ -10,7 +10,6 @@ ENV GRPC_PORT 50051
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Lisbon
 
-
 # Set working directory
 WORKDIR /app
 
@@ -35,7 +34,7 @@ COPY config config
 COPY scripts scripts
 
 # Copy shared gRPC proto files if needed
-COPY grpcs grpcs
+COPY grpcs/proto proto
 
 COPY model model
 

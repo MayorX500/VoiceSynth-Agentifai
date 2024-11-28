@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package normalizer;
+
+service NormalizerService {
+  rpc Normalize (NormalizeRequest) returns (NormalizeResponse);
+}
+
+message NormalizeRequest {
+  string text = 1; // Text to be normalized
+}
+
+message NormalizeResponse {
+  string normalized_text = 1; // Normalized text result
+}

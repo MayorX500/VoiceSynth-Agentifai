@@ -1,10 +1,10 @@
 # modules/normalizer/punctuation_handling.py
 
 import re
-from .base import NormalizationRule
+from base import NormalizationRule
 
-class PunctuationHandlingRule(NormalizationRule):
-    def apply(self, text):
+class PunctuationHandling(NormalizationRule):
+    def apply(self, text, locale='pt'):
         config = self.config
         if not config.get('enabled', False):
             return text

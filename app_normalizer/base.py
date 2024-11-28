@@ -7,7 +7,7 @@ class NormalizationRule(ABC):
         self.config = config
 
     @abstractmethod
-    def apply(self, text, language='pt'):
+    def apply(self, text, locale='pt'):
         """
         Apply the normalization rule to the given text.
         Must be implemented by subclasses.

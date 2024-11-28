@@ -16,8 +16,7 @@ if PROXY_PORT is None:
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # Add the parent directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'grpcs'))) # Add the grpcs directory to the system path
-from grpcs import tts_pb2
-from grpcs import tts_pb2_grpc
+from grpcs import tts_pb2, tts_pb2_grpc
 
 # Start the health check loop
 import time, traceback
