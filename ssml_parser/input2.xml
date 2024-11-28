@@ -1,0 +1,6 @@
+<speak>
+    <p>Hello and welcome to the Smart Home System.</p>
+    <p>The current temperature is <say-as interpret-as="unit">22</say-as> degrees Celsius.</p>
+    <p>Let me give you a quick update:</p>
+    <p>We hope you have a great day!</p>
+</speak>

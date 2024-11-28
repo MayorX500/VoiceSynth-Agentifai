@@ -10,6 +10,7 @@ ENV GRPC_PORT 50051
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Lisbon
 
+
 # Set working directory
 WORKDIR /app
 
