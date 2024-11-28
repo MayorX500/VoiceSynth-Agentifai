@@ -4,6 +4,10 @@ import InputForm from "./InputForm";
 import AudioPlayer from "./AudioPlayer";
 import axios from "axios";
 
+// read server address from environment variable
+const serverAddress = process.env.API_IPADD || "localhost";
+const serverPort = process.env.API_PORT || "5000";
+
 function App() {
   const [audioURL, setAudioURL] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -13,7 +17,7 @@ function App() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/api/tts",
+        "http://" + serverAddress + ":" + serverPort + "/api/tts",
         { text, language },
         { responseType: 'blob' } // Adicione isso para indicar que você está esperando um blob
       );

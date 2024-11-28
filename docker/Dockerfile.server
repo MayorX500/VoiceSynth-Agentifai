@@ -1,34 +1,50 @@
+### WIP ###
+
 # Use a Python base image
 FROM python:3.12-slim
 
 # Set environment variables to optimize Python
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV GRPC_PORT 50051
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Lisbon
+
 
 # Set working directory
 WORKDIR /app
 
+# Update apt
+RUN apt update  && apt upgrade -y
+
+# Set timezone to Europe/Lisbon (Portugal) and install tzdata
+RUN apt -y install tzdata
+
+# Install ffmpeg and wget
+RUN apt install -y ffmpeg wget
+
 # Copy the server-specific requirements and install dependencies
-COPY ../enviroments/server_requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+COPY enviroments/server_requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy server code
-COPY ../app_server /app/app_server
+COPY app_server app_server
 
-COPY ../config /app/config
+COPY config config
+
+COPY scripts scripts
 
 # Copy shared gRPC proto files if needed
-COPY ../grpcs/proto /app/proto
+COPY grpcs/proto proto
 
-COPY ../model /app/model
+COPY model model
 
-COPY ../modules /app/modules
+RUN sh scripts/download_model.sh
 
-COPY ../inputs /app/inputs
-
+COPY inputs inputs
 
 # Expose the gRPC server port
-EXPOSE 50051
+EXPOSE ${GRPC_PORT}
 
 # Set the default command to run the server
-CMD ["python", "/app/app_server/__main__.py"]
+CMD ["python", "app_server"]

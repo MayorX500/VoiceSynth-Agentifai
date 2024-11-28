@@ -1,15 +1,14 @@
-
 ### WIP ###
 
-# Use Python 3.12 slim as the base image
+# Use a Python base image
 FROM python:3.12-slim
 
 # Set environment variables to optimize Python
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV GRPC_PORT 50051
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Lisbon
-#ENV SERVER_IP=sparrow // This is set in the docker-compose file or when running the container
 
 # Set working directory
 WORKDIR /app
@@ -23,24 +22,28 @@ RUN apt -y install tzdata
 # Install ffmpeg and wget
 RUN apt install -y ffmpeg wget
 
-# Copy the client-specific requirements file and install dependencies
-COPY enviroments/client_requirements.txt requirements.txt
+# Copy the server-specific requirements and install dependencies
+COPY enviroments/server_requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire project directory into the container (adjust to only copy required files)
-COPY app_client app_client
+# Copy server code
+COPY app_server app_server
 
 COPY config config
+
+COPY scripts scripts
 
 # Copy shared gRPC proto files if needed
 COPY grpcs/proto proto
 
 COPY model model
 
-COPY inputs inputs 
+RUN sh scripts/download_model.sh
 
-# Expose relevant ports (if any; 50051 is common for gRPC)
-EXPOSE 50051
+COPY inputs inputs
 
-# Default command to run the client
-CMD ["sh", "-c", "python app_client $SERVER_IP"]
+# Expose the gRPC server port
+EXPOSE ${GRPC_PORT}
+
+# Set the default command to run the server
+CMD ["python", "app_server"]

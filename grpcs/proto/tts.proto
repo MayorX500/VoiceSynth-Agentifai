@@ -4,6 +4,15 @@ package tts;
 
 service TTSService {
   rpc SynthesizeStream (stream SynthesisRequest) returns (stream SynthesisResponse);
+
+  rpc AddUser (AddUserRequest) returns (AddUserResponse);
+  rpc RemoveUser (RemoveUserRequest) returns (RemoveUserResponse);
+
+  rpc AddVoice (AddVoiceRequest) returns (AddVoiceResponse);
+  rpc RemoveVoice (RemoveVoiceRequest) returns (RemoveVoiceResponse);
+
+  rpc AssociateUserVoice (AssociateUserVoiceRequest) returns (AssociateUserVoiceResponse);
+  rpc RemoveUserVoiceAssociation (RemoveUserVoiceAssociationRequest) returns (RemoveUserVoiceAssociationResponse);
 }
 
 message SynthesisRequest {
@@ -13,4 +22,56 @@ message SynthesisRequest {
 message SynthesisResponse {
   bytes audio_chunk = 1; // Fragmento do áudio gerado
   int32 chunk_index = 2; // Índice do fragmento (para rastreamento)
+}
+
+message AddUserRequest {
+  string user_token = 1; // Identificador único do usuário
+  string username = 2; // Nome do usuário
+}
+
+message AddUserResponse {
+  string status = 1; // Status da operação (sucesso ou erro)
+}
+
+message RemoveUserRequest {
+  string user_token = 1; // Identificador único do usuário
+}
+
+message RemoveUserResponse {
+  string status = 1; // Status da operação (sucesso ou erro)
+}
+
+message AddVoiceRequest {
+  string voice_name = 1; // Nome da voz
+  bytes audio_chunk = 2; 
+}
+
+message AddVoiceResponse {
+  string status = 1; // Status da operação (sucesso ou erro)
+}
+
+message RemoveVoiceRequest {
+  int32 voice_id = 1; // Identificador único da voz
+}
+
+message RemoveVoiceResponse {
+  string status = 1; // Status da operação (sucesso ou erro)
+}
+
+message AssociateUserVoiceRequest {
+  string user_token = 1; // Identificador único do usuário
+  int32 voice_id = 2; // Identificador único da voz
+}
+
+message AssociateUserVoiceResponse {
+  string status = 1; // Status da operação (sucesso ou erro)
+}
+
+message RemoveUserVoiceAssociationRequest {
+  string user_token = 1; // Identificador único do usuário
+  int32 voice_id = 2; // Identificador único da voz
+}
+
+message RemoveUserVoiceAssociationResponse {
+  string status = 1; // Status da operação (sucesso ou erro)
 }
