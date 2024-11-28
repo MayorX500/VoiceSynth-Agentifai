@@ -135,6 +135,90 @@ class TTSProxy(tts_pb2_grpc.TTSServiceServicer):
                 context.set_details(str(e))
                 context.set_code(grpc.StatusCode.INTERNAL)
                 return
+            
+    def AddUser(self, request, context):
+        with grpc.insecure_channel(self.server_address) as channel:
+            stub = tts_pb2_grpc.TTSServiceStub(channel)
+            try:
+                if self.debug:
+                    print(f"Forwarding AddUser request to {self.server_address}")
+                response = stub.AddUser(request, metadata=context.invocation_metadata())
+                return response
+            except grpc.RpcError as e:
+                print(f"gRPC error: {e.code()} - {e.details()}")
+                context.set_details(str(e))
+                context.set_code(grpc.StatusCode.INTERNAL)
+                return
+
+    def RemoveUser(self, request, context):
+        with grpc.insecure_channel(self.server_address) as channel:
+            stub = tts_pb2_grpc.TTSServiceStub(channel)
+            try:
+                if self.debug:
+                    print(f"Forwarding RemoveUser request to {self.server_address}")
+                response = stub.RemoveUser(request, metadata=context.invocation_metadata())
+                return response
+            except grpc.RpcError as e:
+                print(f"gRPC error: {e.code()} - {e.details()}")
+                context.set_details(str(e))
+                context.set_code(grpc.StatusCode.INTERNAL)
+                return
+
+    def AddVoice(self, request, context):
+        with grpc.insecure_channel(self.server_address) as channel:
+            stub = tts_pb2_grpc.TTSServiceStub(channel)
+            try:
+                if self.debug:
+                    print(f"Forwarding AddVoice request to {self.server_address}")
+                response = stub.AddVoice(request, metadata=context.invocation_metadata())
+                return response
+            except grpc.RpcError as e:
+                print(f"gRPC error: {e.code()} - {e.details()}")
+                context.set_details(str(e))
+                context.set_code(grpc.StatusCode.INTERNAL)
+                return
+
+    def RemoveVoice(self, request, context):
+        with grpc.insecure_channel(self.server_address) as channel:
+            stub = tts_pb2_grpc.TTSServiceStub(channel)
+            try:
+                if self.debug:
+                    print(f"Forwarding RemoveVoice request to {self.server_address}")
+                response = stub.RemoveVoice(request, metadata=context.invocation_metadata())
+                return response
+            except grpc.RpcError as e:
+                print(f"gRPC error: {e.code()} - {e.details()}")
+                context.set_details(str(e))
+                context.set_code(grpc.StatusCode.INTERNAL)
+                return
+
+    def AssociateUserVoice(self, request, context):
+        with grpc.insecure_channel(self.server_address) as channel:
+            stub = tts_pb2_grpc.TTSServiceStub(channel)
+            try:
+                if self.debug:
+                    print(f"Forwarding AssociateUserVoice request to {self.server_address}")
+                response = stub.AssociateUserVoice(request, metadata=context.invocation_metadata())
+                return response
+            except grpc.RpcError as e:
+                print(f"gRPC error: {e.code()} - {e.details()}")
+                context.set_details(str(e))
+                context.set_code(grpc.StatusCode.INTERNAL)
+                return
+
+    def RemoveUserVoiceAssociation(self, request, context):
+        with grpc.insecure_channel(self.server_address) as channel:
+            stub = tts_pb2_grpc.TTSServiceStub(channel)
+            try:
+                if self.debug:
+                    print(f"Forwarding RemoveUserVoiceAssociation request to {self.server_address}")
+                response = stub.RemoveUserVoiceAssociation(request, metadata=context.invocation_metadata())
+                return response
+            except grpc.RpcError as e:
+                print(f"gRPC error: {e.code()} - {e.details()}")
+                context.set_details(str(e))
+                context.set_code(grpc.StatusCode.INTERNAL)
+                return
 
 def serve(args):
     # The address where this proxy server will listen

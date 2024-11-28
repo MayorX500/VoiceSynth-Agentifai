@@ -5,10 +5,16 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'g
 
 from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from a .env file
-## Add environment variables like port, etc.
+
+## Connection port
 CONN_PORT = os.getenv("CONN_PORT")
 if not CONN_PORT:
-    CONN_PORT = 50052 # Default port if not specified in the environment variables
+    CONN_PORT = 50052 # Default proxy port if not specified in the environment variables
+
+## IP address
+IPADD = os.getenv("IPADD")
+if not IPADD:
+    IPADD = "localhost" # Default IP address if not specified in the environment variables
 
 import time
 import grpc
