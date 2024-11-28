@@ -9,7 +9,7 @@ load_dotenv()  # Load environment variables from a .env file
 ## Connection port
 CONN_PORT = os.getenv("CONN_PORT")
 if not CONN_PORT:
-    CONN_PORT = 50052 # Default proxy port if not specified in the environment variables
+    CONN_PORT = 50051 # Default proxy port if not specified in the environment variables
 
 ## IP address
 IPADD = os.getenv("IPADD")
@@ -85,24 +85,51 @@ def remove_user(stub):
     request = tts_pb2.RemoveUserRequest(user_token=user_token)
     response = stub.RemoveUser(request)
     print(response.status)
+
 def add_audio(stub):
-    """Add a new audio to the server."""
     file_path = input("Enter the path of the audio file: ")
     if not os.path.exists(file_path):
         print("Error: File does not exist.")
         return
     
-    with open(file_path, "rb") as audio_file:
-        audio_data = audio_file.read()
-    request = tts_pb2.AddVoiceRequest(file_path=os.path.basename(file_path), audio_data=audio_data)
-    response = stub.AddVoice(request)
-    print(response.status)
+    voice_name = input("Enter the voice name: ").strip()
+    if not voice_name:
+        print("Error: Voice name cannot be empty.")
+        return
+
+    chunk_size = 4096
+    
+    def request_iterator():
+        print(f"Sending voice name: {voice_name}")  # Debugging line
+
+        yield tts_pb2.AddVoiceRequest(voice_name=voice_name)
+
+        # Em seguida, lê o arquivo em chunks e envia cada parte
+        with open(file_path, "rb") as audio_file:
+            while chunk := audio_file.read(chunk_size):
+                #if debug:
+                #    print(f"Enviando chunk com {len(chunk)} bytes...")
+                yield tts_pb2.AddVoiceRequest(audio_chunk=chunk)
+
+    
+    #if debug:
+    #    print(f"Adicionando áudio '{file_path}' como voz '{voice_name}'...")
+
+    # Envia os chunks ao servidor
+    try:
+        response = stub.AddVoice(request_iterator())
+        print(f"Resposta do servidor: {response.status}")
+    except grpc.RpcError as e:
+        print(f"Erro no gRPC: {e.code()} - {e.details()}")
+
+
 def remove_audio(stub):
     """Remove an audio from the server."""
     voice_id = int(input("Enter the voice ID to remove: "))
     request = tts_pb2.RemoveVoiceRequest(voice_id=voice_id)
     response = stub.RemoveVoice(request)
     print(response.status)
+
 def associate_audio(stub):
     """Associate an audio with a user."""
     user_token = input("Enter user token: ")
@@ -110,6 +137,7 @@ def associate_audio(stub):
     request = tts_pb2.AssociateUserVoiceRequest(user_token=user_token, voice_id=voice_id)
     response = stub.AssociateUserVoice(request)
     print(response.status)
+
 def disassociate_audio(stub):
     """Disassociate an audio from a user."""
     user_token = input("Enter user token: ")
@@ -117,6 +145,7 @@ def disassociate_audio(stub):
     request = tts_pb2.RemoveUserVoiceAssociationRequest(user_token=user_token, voice_id=voice_id)
     response = stub.RemoveUserVoiceAssociation(request)
     print(response.status)
+
 def synthesize_text(stub, user_token, debug=False):
     """Generate audio from text."""
     text = input("Enter text to synthesize: ")

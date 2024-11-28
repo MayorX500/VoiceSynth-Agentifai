@@ -146,34 +146,61 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
     
     def AddVoice(self, request_iterator, context):
         try:
-            voice_name = None
-            audio_data = bytearray()
-            # Process the stream to collect the voice name and audio data
+            voice_name = None  # Name provided by the client
+            audio_data = bytearray()  # Buffer to store the audio sent by the client
+    
+            # Process the stream to collect the name and audio data
             for request in request_iterator:
                 if not voice_name:
-                    voice_name = request.voice_name  # The first message should contain the voice name
-                audio_data.extend(request.audio_chunk)
-            if not voice_name or not audio_data:
+                    # The voice name is expected in the first request
+                    voice_name = request.voice_name.strip().decode('utf-8')  # Decode bytes back to string
+                    if not voice_name:
+                        context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+                        context.set_details("Invalid or missing voice name.")
+                        return tts_pb2.AddVoiceResponse(status="Failure")
+                
+                audio_data.extend(request.audio_chunk)  # Collect audio chunks
+            
+            # Ensure audio data was received
+            if not audio_data:
                 context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
-                context.set_details("Voice name or audio data not provided.")
-                return tts_pb2.AddVoiceResponse(status="Failed")
-            # Save the audio file
-            file_name = f"{voice_name.replace(' ', '_')}.wav"
+                context.set_details("No audio data received.")
+                return tts_pb2.AddVoiceResponse(status="Failure")
+            
+            # Sanitize the voice name to avoid filesystem issues
+            sanitized_name = "".join(c for c in voice_name if c.isalnum() or c in " _-").strip()
+            if not sanitized_name:
+                context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+                context.set_details("Voice name contains only invalid characters.")
+                return tts_pb2.AddVoiceResponse(status="Failure")
+            
+            # Generate the full path to save the file
+            file_name = f"{sanitized_name}.wav"
             file_path = os.path.join(self.storage_dir, file_name)
+    
+            # Save the audio file
             with open(file_path, 'wb') as f:
                 f.write(audio_data)
-            # Store the voice in the database
-            new_voice = models.Voice(voice_name=voice_name, file_path=file_path)
+    
+            # Save to the database
+            new_voice = models.Voice(voice_name=sanitized_name, file_path=file_path)
             self.db_session.add(new_voice)
             self.db_session.commit()
+    
+            if self.debug:
+                print(f"Voice added successfully: {sanitized_name} at {file_path}")
+    
             return tts_pb2.AddVoiceResponse(status="Success")
+        
         except Exception as e:
             self.db_session.rollback()
             print(f"Error adding voice: {e}")
             traceback.print_exc()
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
-            return tts_pb2.AddVoiceResponse(status="Failed")
+            return tts_pb2.AddVoiceResponse(status="Failure")
+    
+
     def RemoveVoice(self, request, context):
         try:
             voice = self.db_session.query(models.Voice).filter_by(id=request.voice_id).first()
