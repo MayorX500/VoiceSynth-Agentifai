@@ -42,6 +42,7 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
     def __init__(self,args):
         self.debug = args.debug
         self.db_session = Session()  # Initialize the session here
+        self.print_tables()
         with open(args.configuration_file, 'r') as f:
             self.config = json.load(f)
         self.storage_dir = self.config.get("storage_directory", "inputs/voices")
@@ -140,6 +141,7 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
             new_user = models.User(user_token=request.user_token, username=request.username)
             self.db_session.add(new_user)
             self.db_session.commit()
+            self.print_tables()
             return tts_pb2.AddUserResponse(status="User added successfully")
         except Exception as e:
             self.db_session.rollback()
@@ -155,59 +157,49 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
             
             self.db_session.delete(user)
             self.db_session.commit()
+            self.print_tables()
             return tts_pb2.RemoveUserResponse(status="User removed successfully")
         except Exception as e:
             self.db_session.rollback()
             return tts_pb2.RemoveUserResponse(status=f"Error removing user: {e}")
     
-    def AddVoice(self, request_iterator, context):
+    def AddVoice(self, request, context):
         try:
-            voice_name = None  # Name provided by the client
-            audio_data = bytearray()  # Buffer to store the audio sent by the client
-    
-            # Process the stream to collect the name and audio data
-            for request in request_iterator:
-                if not voice_name:
-                    # The voice name is expected in the first request
-                    voice_name = request.voice_name.strip().decode('utf-8')  # Decode bytes back to string
-                    if not voice_name:
-                        context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
-                        context.set_details("Invalid or missing voice name.")
-                        return tts_pb2.AddVoiceResponse(status="Failure")
-                
-                audio_data.extend(request.audio_chunk)  # Collect audio chunks
-            
-            # Ensure audio data was received
+            voice_name = request.voice_name.strip()
+            audio_data = request.audio_chunk
+
+            if not voice_name:
+                context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+                context.set_details("Invalid or missing voice name.")
+                return tts_pb2.AddVoiceResponse(status="Failure")
+
             if not audio_data:
                 context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
                 context.set_details("No audio data received.")
                 return tts_pb2.AddVoiceResponse(status="Failure")
-            
-            # Sanitize the voice name to avoid filesystem issues
+
             sanitized_name = "".join(c for c in voice_name if c.isalnum() or c in " _-").strip()
             if not sanitized_name:
                 context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
                 context.set_details("Voice name contains only invalid characters.")
                 return tts_pb2.AddVoiceResponse(status="Failure")
-            
-            # Generate the full path to save the file
+
             file_name = f"{sanitized_name}.wav"
             file_path = os.path.join(self.storage_dir, file_name)
-    
-            # Save the audio file
+
             with open(file_path, 'wb') as f:
                 f.write(audio_data)
-    
-            # Save to the database
+
             new_voice = models.Voice(voice_name=sanitized_name, file_path=file_path)
             self.db_session.add(new_voice)
             self.db_session.commit()
-    
-            if self.debug:
-                print(f"Voice added successfully: {sanitized_name} at {file_path}")
-    
+
+            #if self.debug:
+            #    print(f"Voice added successfully: {sanitized_name} at {file_path}")
+
+            self.print_tables()
             return tts_pb2.AddVoiceResponse(status="Success")
-        
+
         except Exception as e:
             self.db_session.rollback()
             print(f"Error adding voice: {e}")
@@ -215,7 +207,6 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return tts_pb2.AddVoiceResponse(status="Failure")
-    
 
     def RemoveVoice(self, request, context):
         try:
@@ -225,6 +216,7 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
             
             self.db_session.delete(voice)
             self.db_session.commit()
+            self.print_tables()
             return tts_pb2.RemoveVoiceResponse(status="Voice removed successfully")
         except Exception as e:
             self.db_session.rollback()
@@ -240,6 +232,7 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
             
             user.voices.append(voice)
             self.db_session.commit()
+            self.print_tables()
             return tts_pb2.AssociateUserVoiceResponse(status="Association created successfully")
         except Exception as e:
             self.db_session.rollback()
@@ -255,10 +248,32 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
             
             user.voices.remove(voice)
             self.db_session.commit()
+            self.print_tables()
             return tts_pb2.RemoveUserVoiceAssociationResponse(status="Association removed successfully")
         except Exception as e:
             self.db_session.rollback()
             return tts_pb2.RemoveUserVoiceAssociationResponse(status=f"Error removing association: {e}")
+
+    def print_tables(self):
+        print("\n--- Current Database State ---")
+
+        # Fetch and print Users Table
+        users = self.db_session.query(models.User).all()
+        print("\nUsers Table:")
+        for user in users:
+            associated_voices = [voice.voice_name for voice in user.voices]
+            print(f"Token: {user.user_token}, Username: {user.username}, Associated Voices: {associated_voices}")
+
+        # Fetch and print Voices Table
+        voices = self.db_session.query(models.Voice).all()
+        print("\nVoices Table:")
+        for voice in voices:
+            associated_users = [user.username for user in voice.users]
+            print(f"ID: {voice.id}, Name: {voice.voice_name}, File Path: {voice.file_path}, Associated Users: {associated_users}")
+
+        print("--- End of Database State ---\n")
+
+
 
 
 def serve(args):

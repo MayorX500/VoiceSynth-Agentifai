@@ -79,6 +79,7 @@ def create_user(stub):
     request = tts_pb2.AddUserRequest(user_token=user_token, username=username)
     response = stub.AddUser(request)
     print(response.status)
+    
 def remove_user(stub):
     """Remove an existing user."""
     user_token = input("Enter user token: ")
@@ -97,30 +98,18 @@ def add_audio(stub):
         print("Error: Voice name cannot be empty.")
         return
 
-    chunk_size = 4096
-    
-    def request_iterator():
-        print(f"Sending voice name: {voice_name}")  # Debugging line
-
-        yield tts_pb2.AddVoiceRequest(voice_name=voice_name)
-
-        # Em seguida, lê o arquivo em chunks e envia cada parte
-        with open(file_path, "rb") as audio_file:
-            while chunk := audio_file.read(chunk_size):
-                #if debug:
-                #    print(f"Enviando chunk com {len(chunk)} bytes...")
-                yield tts_pb2.AddVoiceRequest(audio_chunk=chunk)
-
-    
-    #if debug:
-    #    print(f"Adicionando áudio '{file_path}' como voz '{voice_name}'...")
-
-    # Envia os chunks ao servidor
+    # Read the entire audio file into memory
+    with open(file_path, "rb") as audio_file:
+        audio_data = audio_file.read()
+        
     try:
-        response = stub.AddVoice(request_iterator())
+        # Send the entire file in a single message
+        request = tts_pb2.AddVoiceRequest(voice_name=voice_name, audio_chunk=audio_data)
+        response = stub.AddVoice(request)  # Non-streaming gRPC call
         print(f"Resposta do servidor: {response.status}")
     except grpc.RpcError as e:
         print(f"Erro no gRPC: {e.code()} - {e.details()}")
+
 
 
 def remove_audio(stub):
