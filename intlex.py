@@ -51,9 +51,9 @@ class Model():
         if speaker_embedding is None:
             speaker_embedding = self.speaker_embedding
         if kwargs is None:
-            kwargs = {"length_penalty":1.0,"repetition_penalty":2.5, "top_k":20, "top_p":0.95, "do_sample":True,"temperature":0.3}
+            kwargs = {"length_penalty":1.0,"repetition_penalty":5.0, "top_k":20, "top_p":0.8, "do_sample":True,"temperature":0.001}
         else:
-            kwargs = {**{"length_penalty":1.0,"repetition_penalty":2.5, "top_k":20, "top_p":0.95, "do_sample":True,"temperature":0.3}, **kwargs}
+            kwargs = {**{"length_penalty":1.0,"repetition_penalty":5.0, "top_k":20, "top_p":0.8, "do_sample":True,"temperature":0.001}, **kwargs}
         print("Generating audio...")
         return self.model.inference(text, lang, gpt_cond_latent, speaker_embedding, **kwargs)
     

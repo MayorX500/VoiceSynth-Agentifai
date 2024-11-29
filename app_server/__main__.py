@@ -35,7 +35,7 @@ if NORMALIZER_PORT is None:
 from db import models
 
 # Initialize SQLAlchemy engine and sessionmaker
-engine = create_engine('sqlite:///tts_system.db')
+engine = create_engine('sqlite:///db/tts_system.db')
 Session = sessionmaker(bind=engine)
 
 class TTSService(tts_pb2_grpc.TTSServiceServicer):

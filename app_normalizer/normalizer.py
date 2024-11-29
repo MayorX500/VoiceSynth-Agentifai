@@ -24,8 +24,6 @@ class NormalizerService(normalizer_pb2_grpc.NormalizerServiceServicer):
         
     def Normalize(self, request, context):
         normalized_text = self.normalizer.normalize_text(request.text.strip())  # Normalization
-        print(f"Received text: '{request.text}'")
-        print(f"Normalized text: '{normalized_text}'")
         return normalizer_pb2.NormalizeResponse(normalized_text=normalized_text)
 
 def serve(args):
