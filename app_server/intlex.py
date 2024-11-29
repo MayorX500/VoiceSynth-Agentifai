@@ -1,6 +1,3 @@
-import sys
-import os
-
 import torch
 import argparse as ap
 import torchaudio
@@ -17,7 +14,7 @@ class Model():
     config: dict[str, str]
     model: Xtts
     xtts_config: XttsConfig
-    default_kwargs = {"length_penalty":1.0,"repetition_penalty":5.0, "top_k":20, "top_p":0.8, "do_sample":True,"temperature":0.001}
+    default_kwargs = {"length_penalty":1.0,"repetition_penalty":2.5, "top_k":40, "top_p":0.5, "do_sample":True,"temperature":0.7}
 
     def __init__(self, config_file: str):
         print("Loading model...")
@@ -53,7 +50,7 @@ class Model():
                 gpt_cond_latent, speaker_embedding = self.get_conditioning_latents(audio_path)
             else:
                 print("Getting default conditioning latents...")
-                gpt_cond_latent, speaker_embedding = self.get_conditioning_latents(self.config.get("audio_path", {"pt":"inputs/voices/input_voice.wav","en":"inputs/voices/eng_morgan_freeman.wav"}).get(lang))
+                gpt_cond_latent, speaker_embedding = self.get_conditioning_latents(self.config.get("audio_path").get(lang))
         if kwargs is None:
             kwargs = self.default_kwargs
         else:
@@ -81,8 +78,7 @@ class Model():
 
 def main(args):
     model = Model(args.configuration)
-    model.get_conditioning_latents()
-    wav = model.generate_audio(args.text, args.lang, **args.kwargs)
+    wav = model.generate_audio(args.text, lang=args.lang, **args.kwargs)
     ## Save audio to file
     model.save_audio(args.output, wav)
     clear_memory()

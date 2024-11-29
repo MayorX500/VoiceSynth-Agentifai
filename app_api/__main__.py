@@ -36,32 +36,36 @@ request_counter = itertools.count(random.randint(1,100000000))  # Counter for au
 app = Flask(__name__)
 CORS(app)  # Permitir requisições de outros domínios
 
-@app.route("/api/tts", methods=["POST"])
+@app.route("/api/tts", methods=["POST", "OPTIONS"])
 def tts():
+    if request.method == "OPTIONS":
+        # Return an empty response to indicate that the preflight request is OK
+        response = make_response('', 204)
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+        response.headers.add("Access-Control-Allow-Methods", "POST,OPTIONS")
+        return response
+
+    # Your existing POST request handling logic
     print("Request received")
-    # Processamento TTS aqui (substitua pelo modelo que está a treinar)
-    # Exemplo: Receber texto ou áudio e devolver o arquivo de áudio gerado
-    
-    data = request.get_json()  # Receber JSON enviado do frontend
-    text = data.get("text") if "text" in data.keys() else ""  # Extrair o texto do JSON
-    language = data.get("language") if "language" in data.keys() else ""  # Extrair o idioma do JSON
-    user_token = data.get("user_token") if "user_token" in data.keys() else "1"  # Extrair o token do usuário do JSON
+    data = request.get_json()
+    text = data.get("text", "")
+    language = data.get("language", "")
+    user_token = data.get("user_token", "1")
 
     if text:
-        # Implementar conversão de texto para áudio e salvar o áudio
         with grpc.insecure_channel(f"{PROXY_ADD}:{PROXY_PORT}") as channel:
             stub = TTSServiceStub(channel)
-            request_num = next(request_counter)  # Get the next request number
+            request_num = next(request_counter)
             synthesize_text(stub, user_token, text=text, output_dir="app_api/outputs", filename=f"generated-{request_num}.wav", debug=True)       
         audio_path = f"outputs/generated-{request_num}.wav"
-        # Enviar o áudio de volta como resposta
         response = make_response(send_file(audio_path, mimetype="audio/wav"))
         response.headers["Content-Disposition"] = "attachment; filename=output.wav"
+        response.headers.add("Access-Control-Allow-Origin", "*")
         print("Response sent")
         return response
     else:
         return jsonify({"error": "Texto não fornecido"}), 400
-    
 
 
 if __name__ == "__main__":

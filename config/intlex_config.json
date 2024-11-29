@@ -2,7 +2,7 @@
    "normalization_config":"config/normalization_rules.toml",
    "_comment_normalization_config":"Caminho para o ficheiro de configuração de normalização a ser usado pelo modelo",
    "audio_path":{
-      "pt":"inputs/voices/input_voice.wav",
+      "pt":"inputs/voices/ai-female-voice.wav",
       "en":"inputs/voices/eng_morgan_freeman.wav"
    },
    "_comment_audio_path":"Vozes default de entrada para a conversão, o campo é um dicionário com as chaves sendo os idiomas das vozes e os valores sendo os caminhos para os ficheiros de áudio",

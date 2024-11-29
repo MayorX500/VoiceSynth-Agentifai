@@ -31,7 +31,7 @@ COPY config config
 COPY scripts scripts
 COPY db db
 COPY grpcs grpcs
-COPY model model
+RUN mkdir model
 COPY inputs inputs
 
 # Copy the server-specific requirements and install dependencies

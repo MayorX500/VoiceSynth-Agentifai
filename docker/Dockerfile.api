@@ -34,4 +34,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE ${PORT}
 
 # Default command to run the client
-CMD ["sh", "-c", "python app_api"]
+CMD ["python","app_api"]

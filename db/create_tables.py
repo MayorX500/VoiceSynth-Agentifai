@@ -20,7 +20,7 @@ u4 = User(user_token=4, username="Maria")
 u5 = User(user_token=5, username="Carlos") 
 
 
-v1 = Voice(voice_name="ai-female-voice", file_path="inputs/voices/ai-female-voice-24k.wav")
+v1 = Voice(voice_name="ai-female-voice", file_path="inputs/voices/ai-female-voice.wav")
 v2 = Voice(voice_name="duarte", file_path="inputs/voices/duarte.wav")
 v3 = Voice(voice_name="morgan-freeman", file_path="inputs/voices/eng_morgan_freeman.wav")
 

@@ -5,9 +5,12 @@ import AudioPlayer from "./AudioPlayer";
 import axios from "axios";
 
 // read server address from environment variable
-const serverAddress = process.env.API_IPADD || "localhost";
-const serverPort = process.env.API_PORT || "5000";
 function App() {
+
+  const serverAddress = process.env.REACT_APP_API_IP_ADDRESS || "localhost";
+  const serverPort = process.env.REACT_APP_API_PORT || "5000";
+
+
   const [audioURL, setAudioURL] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(true); // Novo estado para controlar a exibição do formulário
@@ -15,6 +18,8 @@ function App() {
   const handleTextToSpeech = async (text, language) => {
     setLoading(true);
     try {
+
+      console.log(`Sending request to: http://${serverAddress}:${serverPort}/api/tts`);
       const response = await axios.post(
         "http://" + serverAddress + ":" + serverPort + "/api/tts",
         { text, language },

@@ -1,22 +1,5 @@
 # This file is used to build the docker containers for the frontend, client, api, proxy, and server.
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.app
-    image: tts-agentifai:frontend
-    container_name: frontend_container
-    networks:
-      - tts_network
-    depends_on:
-      - api
-    environment:
-      - API_IPADD=api_container
-      - API_PORT=5000
-      - PORT=3000
-    ports:
-      - "3000:3000"
-
   client:
     build:
       context: .
@@ -30,6 +13,22 @@ services:
     environment:
       - CONN_PORT=50051
       - PROXY_ADD=proxy_container
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    image: tts-agentifai:frontend
+    container_name: frontend_container
+    networks:
+      - tts_network
+    depends_on:
+      - api
+    environment:
+      - REACT_APP_API_PORT=5000
+      - PORT=3000
+    ports:
+      - "3000:3000"
 
   api:
     build:
@@ -45,6 +44,8 @@ services:
       - PROXY_ADD=proxy_container 
       - PROXY_PORT=50051
       - PORT=5000
+    ports:
+      - "5001:5000"
 
   proxy:
     build:
