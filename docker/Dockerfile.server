@@ -4,9 +4,14 @@ FROM python:3.12-slim
 # Set environment variables to optimize Python
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV GRPC_PORT 50051
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Lisbon
+
+## Load the environment variables required for the server
+ENV SERVER_PORT=50051
+ENV SERVER_CONFIG=config/intlex_config.json
+ENV NORMALIZER_IPADDRESS=localhost
+ENV NORMALIZER_PORT=50051
 
 # Set working directory
 WORKDIR /app
@@ -15,35 +20,29 @@ WORKDIR /app
 RUN apt update  && apt upgrade -y
 
 # Set timezone to Europe/Lisbon (Portugal) and install tzdata
-RUN apt -y install tzdata
+RUN apt -y install tzdata && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
 
 # Install ffmpeg and wget
 RUN apt install -y ffmpeg wget
+
+# Copy server code and required files
+COPY app_server app_server
+COPY config config
+COPY scripts scripts
+COPY db db
+COPY grpcs grpcs
+COPY model model
+COPY inputs inputs
 
 # Copy the server-specific requirements and install dependencies
 COPY enviroments/server_requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy server code
-COPY app_server app_server
-
-COPY config config
-
-COPY scripts scripts
-
-COPY db db
-
-# Copy shared gRPC proto files if needed
-COPY grpcs grpcs
-
-COPY model model
-
+# Download the fine-tuned model from the cloud
 RUN sh scripts/download_model.sh
 
-COPY inputs inputs
-
 # Expose the gRPC server port
-EXPOSE ${GRPC_PORT}
+EXPOSE ${SERVER_PORT}
 
-# Set the default command to run the server
+# Set the defaukeylt command to run the server
 CMD ["python", "app_server"]

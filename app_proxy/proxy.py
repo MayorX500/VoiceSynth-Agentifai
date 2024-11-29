@@ -14,6 +14,10 @@ PROXY_PORT = os.getenv("PROXY_PORT")
 if PROXY_PORT is None:
     PROXY_PORT = 50052 # Default port if not specified as an environment variable
 
+PROXY_CONFIG = os.getenv("PROXY_CONFIG")
+if PROXY_CONFIG is None:
+    PROXY_CONFIG = "config/proxy_config.json" # Default configuration file if not specified as an environment variable
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # Add the parent directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'grpcs'))) # Add the grpcs directory to the system path
 from grpcs import tts_pb2, tts_pb2_grpc
@@ -220,6 +224,8 @@ class TTSProxy(tts_pb2_grpc.TTSServiceServicer):
                 return
 
 def serve(args):
+    if args.config_file is None:
+        args.config_file = PROXY_CONFIG
     # The address where this proxy server will listen
     proxy_address = f'[::]:{PROXY_PORT}'
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=20))

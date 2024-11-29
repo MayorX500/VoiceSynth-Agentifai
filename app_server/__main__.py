@@ -24,6 +24,10 @@ SERVER_PORT = os.getenv("SERVER_PORT")
 if SERVER_PORT is None:
     SERVER_PORT = 50051 # Default port if not specified as an environment variable
 
+SERVER_CONFIG = os.getenv("SERVER_CONFIG")
+if SERVER_CONFIG is None:
+    SERVER_CONFIG = "config/intlex_config.json" # Default port if not specified as an environment variable
+
 NORMALIZER_IPADDRESS = os.getenv("NORMALIZER_IPADDRESS")
 if NORMALIZER_IPADDRESS is None:
     NORMALIZER_IPADDRESS = "localhost" # Default port if not specified as an environment variable
@@ -98,37 +102,40 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
                 print(f"Loaded voice configuration for user_token {user_token}: {voice_config}")
             
             # Establish a connection to the normalizer service
-            with grpc.insecure_channel(f'{NORMALIZER_IPADDRESS}:{NORMALIZER_PORT}') as channel:
-                normalizer_stub = normalizer_pb2_grpc.NormalizerServiceStub(channel)
+            try:
+                with grpc.insecure_channel(f'{NORMALIZER_IPADDRESS}:{NORMALIZER_PORT}') as channel:
+                    normalizer_stub = normalizer_pb2_grpc.NormalizerServiceStub(channel)
 
-                # Normalize each text segment
-                for request in request_iterator:
-                    if not context.is_active():
-                        break
+                    # Normalize each text segment
+                    for request in request_iterator:
+                        if not context.is_active():
+                            break
 
-                    # Send text to the normalizer
-                    normalize_request = normalizer_pb2.NormalizeRequest(text=request.text)
-                    normalize_response = normalizer_stub.Normalize(normalize_request)
-                    normalized_text = normalize_response.normalized_text
+                        # Send text to the normalizer
+                        normalize_request = normalizer_pb2.NormalizeRequest(text=request.text)
+                        normalize_response = normalizer_stub.Normalize(normalize_request)
+                        normalized_text = normalize_response.normalized_text
+                    text = normalized_text
+            except Exception as e:
+                print(f"Error connecting to the normalizer service: {e}")
+                text = request.text
+            if self.debug:
+                print(f"Client {user_token} requested synthesis for: {text}")
 
-                text = normalized_text
-                if self.debug:
-                    print(f"Client {user_token} requested synthesis for: {text}")
-
-                if self.pre_compute:
-                    audio = self.tts.generate_audio(text, voice_path=voice_config.file_path, gpt_cond_latent=self.voices[f"{user_token}"]["gpt_cond_latent"], speaker_embedding=self.voices[f"{user_token}"]["speaker_embedding"])
-                else:
-                    audio = self.tts.generate_audio(text, voice_path=voice_config.file_path)
-                audio = np.clip(audio, -1.0, 1.0)
-                audio = np.int16(audio * 32767)
-                
-                for i in range(0, len(audio), block_size):
-                    audio_chunk = audio[i:i + block_size]
-                    yield tts_pb2.SynthesisResponse(
-                        audio_chunk=audio_chunk.tobytes(),
-                        chunk_index=chunk_index
-                    )
-                    chunk_index += 1
+            if self.pre_compute:
+                audio = self.tts.generate_audio(text, voice_path=voice_config.file_path, gpt_cond_latent=self.voices[f"{user_token}"]["gpt_cond_latent"], speaker_embedding=self.voices[f"{user_token}"]["speaker_embedding"])
+            else:
+                audio = self.tts.generate_audio(text, voice_path=voice_config.file_path)
+            audio = np.clip(audio, -1.0, 1.0)
+            audio = np.int16(audio * 32767)
+            
+            for i in range(0, len(audio), block_size):
+                audio_chunk = audio[i:i + block_size]
+                yield tts_pb2.SynthesisResponse(
+                    audio_chunk=audio_chunk.tobytes(),
+                    chunk_index=chunk_index
+                )
+                chunk_index += 1
 
         except Exception as e:
             print(f"Error processing user_token {user_token}: {e}")
@@ -277,6 +284,8 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
 
 
 def serve(args):
+    if args.configuration_file is None:
+        args.configuration_file = SERVER_CONFIG
     # Start the gRPC server
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=20))
     tts_pb2_grpc.add_TTSServiceServicer_to_server(TTSService(args), server)
@@ -287,7 +296,7 @@ def serve(args):
 
 if __name__ == "__main__":
     parser = ap.ArgumentParser()
-    parser.add_argument('configuration_file', nargs='?' , type=str, default="config/intlex_config.json", help="Path to the configuration file for the TTS model")
+    parser.add_argument('configuration_file', nargs='?' , type=str, default=None, help="Path to the configuration file for the TTS model")
     parser.add_argument('-p', '--pre_compute', action='store_true', help="Pre-compute voice configurations")
     parser.add_argument('-d',"--debug", action="store_true", help="Enable debug mode")
     args = parser.parse_args()
