@@ -12,7 +12,7 @@ session = Session()
 # Create tables if they don't already exist
 Base.metadata.create_all(engine)
 
-
+u0 = User(user_token=0, username="Admin")
 u1 = User(user_token=1, username="Jose")
 u2 = User(user_token=2, username="Ana")
 u3 = User(user_token=3, username="Pedro")
@@ -24,6 +24,7 @@ v1 = Voice(voice_name="ai-female-voice", file_path="inputs/voices/ai-female-voic
 v2 = Voice(voice_name="duarte", file_path="inputs/voices/duarte.wav")
 v3 = Voice(voice_name="morgan-freeman", file_path="inputs/voices/eng_morgan_freeman.wav")
 
+session.add(u0)
 session.add(u1)
 session.add(u2)
 session.add(u3)

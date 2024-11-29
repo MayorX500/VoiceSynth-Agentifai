@@ -153,36 +153,49 @@ def main(args):
     with grpc.insecure_channel(f"{args.ipadd}:{CONN_PORT}") as channel:
         stub = tts_pb2_grpc.TTSServiceStub(channel)
         while True:
-            print("\nOptions:")
-            print("1. Create User")
-            print("2. Remove User")
-            print("3. Add Audio")
-            print("4. Remove Audio")
-            print("5. Associate Audio with User")
-            print("6. Disassociate Audio from User")
-            print("7. Synthesize Audio")
-            print("8. Exit")
-            choice = input("Select an option (1-8): ")
-            if choice == "1":
-                create_user(stub)
-            elif choice == "2":
-                remove_user(stub)
-            elif choice == "3":
-                add_audio(stub)
-            elif choice == "4":
-                remove_audio(stub)
-            elif choice == "5":
-                associate_audio(stub)
-            elif choice == "6":
-                disassociate_audio(stub)
-            elif choice == "7":
-                user_token = input("Enter user token: ")
-                synthesize_text(stub, user_token, debug=args.debug)
-            elif choice == "8":
-                print("Exiting...")
-                break
+            if user_token == "0":
+                # Menu para user_token == 0
+                print("\nOptions:")
+                print("1. Create User")
+                print("2. Remove User")
+                print("3. Add Audio")
+                print("4. Remove Audio")
+                print("5. Associate Audio with User")
+                print("6. Disassociate Audio from User")
+                print("7. Exit")
+                choice = input("Select an option (1-5): ")
+
+                if choice == "1":
+                    create_user(stub)
+                elif choice == "2":
+                    remove_user(stub)
+                elif choice == "3":
+                    add_audio(stub)
+                elif choice == "4":
+                    remove_audio(stub)
+                elif choice == "5":
+                    associate_audio(stub)
+                elif choice == "6":
+                    disassociate_audio(stub)
+                elif choice == "7":
+                    print("Exiting...")
+                    break
+                else:
+                    print("Invalid option. Please try again.")
             else:
-                print("Invalid option. Please try again.")
+                # Menu para user_token != 0
+                print("\nOptions:")
+                print("1. Synthesize Audio")
+                print("2. Exit")
+                choice = input("Select an option (1-2): ")
+
+                if choice == "1":
+                    synthesize_text(stub, user_token, debug=args.debug)
+                elif choice == "2":
+                    print("Exiting...")
+                    break
+                else:
+                    print("Invalid option. Please try again.")
 
 
 if __name__ == "__main__":
