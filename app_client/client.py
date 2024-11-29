@@ -12,9 +12,9 @@ if not CONN_PORT:
     CONN_PORT = 50051 # Default proxy port if not specified in the environment variables
 
 ## IP address
-IPADD = os.getenv("IPADD")
-if not IPADD:
-    IPADD = "localhost" # Default IP address if not specified in the environment variables
+PROXY_ADD = os.getenv("PROXY_ADD")
+if not PROXY_ADD:
+    PROXY_ADD = "localhost" # Default IP address if not specified in the environment variables
 
 import time
 import grpc
@@ -135,24 +135,23 @@ def disassociate_audio(stub):
     response = stub.RemoveUserVoiceAssociation(request)
     print(response.status)
 
-def synthesize_text(stub, user_token, debug=False):
+def synthesize_text(stub, user_token, debug=False, output_dir=None, filename=None, text=None):
     """Generate audio from text."""
-    text = input("Enter text to synthesize: ")
+    if text is None:
+        text = input("Enter text to synthesize: ")
     pid = os.getpid()  # Get the process ID
     request_counter = itertools.count(random.randint(1, 100000000))  # Counter for audio requests
     request_num = next(request_counter)
-    stream_audio_to_file(stub, text, pid, request_num, user_token, debug=debug)
+    stream_audio_to_file(stub, text, pid, request_num, user_token, debug=debug, output_dir=output_dir, filename=filename)   
 
 def main(args):
-    user_token = args.user_token  # Get the user_token from command-line arguments
-
-    if not user_token:
-        print("Error: user_token is required.")
-        return
-
-    with grpc.insecure_channel(f"{args.ipadd}:{CONN_PORT}") as channel:
-        stub = tts_pb2_grpc.TTSServiceStub(channel)
-        while True:
+    user_token = args.user_token
+    if args.proxy_add is None:
+        args.proxy_add = PROXY_ADD
+    running = True
+    while running:
+        if user_token == "0":
+            # Menu para user_token == 0
             print("\nOptions:")
             print("1. Create User")
             print("2. Remove User")
@@ -160,35 +159,47 @@ def main(args):
             print("4. Remove Audio")
             print("5. Associate Audio with User")
             print("6. Disassociate Audio from User")
-            print("7. Synthesize Audio")
-            print("8. Exit")
-            choice = input("Select an option (1-8): ")
-            if choice == "1":
-                create_user(stub)
-            elif choice == "2":
-                remove_user(stub)
-            elif choice == "3":
-                add_audio(stub)
-            elif choice == "4":
-                remove_audio(stub)
-            elif choice == "5":
-                associate_audio(stub)
-            elif choice == "6":
-                disassociate_audio(stub)
-            elif choice == "7":
-                user_token = input("Enter user token: ")
-                synthesize_text(stub, user_token, debug=args.debug)
-            elif choice == "8":
-                print("Exiting...")
-                break
-            else:
-                print("Invalid option. Please try again.")
+            print("7. Exit")
+            choice = input("Select an option (1-5): ")
+            with grpc.insecure_channel(f"{args.proxy_add}:{CONN_PORT}") as channel:
+                stub = tts_pb2_grpc.TTSServiceStub(channel)
+                if choice == "1":
+                    create_user(stub)
+                elif choice == "2":
+                    remove_user(stub)
+                elif choice == "3":
+                    add_audio(stub)
+                elif choice == "4":
+                    remove_audio(stub)
+                elif choice == "5":
+                    associate_audio(stub)
+                elif choice == "6":
+                    disassociate_audio(stub)
+                elif choice == "7":
+                    print("Exiting...")
+                    running = False
+                else:
+                    print("Invalid option. Please try again.")
+        else:
+            # Menu para user_token != 0
+            print("\nOptions:")
+            print("1. Synthesize Audio")
+            print("2. Exit")
+            choice = input("Select an option (1-2): ")
+            with grpc.insecure_channel(f"{args.proxy_add}:{CONN_PORT}") as channel:
+                stub = tts_pb2_grpc.TTSServiceStub(channel)
+                if choice == "1":
+                    synthesize_text(stub, user_token, debug=args.debug)
+                elif choice == "2":
+                    print("Exiting...")
+                    running = False
+                else:
+                    print("Invalid option. Please try again.")
 
 
 if __name__ == "__main__":
     parser = ap.ArgumentParser()
-    parser.add_argument("ipadd", type=str, help="IP address of the server")
-    parser.add_argument("user_token", type=str, help="User token for authentication")
+    parser.add_argument("proxy_add", nargs='?', type=str, help="IP address of the server", default=PROXY_ADD)
     parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode", default=False)
     args = parser.parse_args()
     main(args)

@@ -1,14 +1,15 @@
-### WIP ###
-
 # Use a Python base image
 FROM python:3.12-slim
 
 # Set environment variables to optimize Python
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV GRPC_PORT 50051
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Lisbon
+
+# This is set in the docker-compose file or when running the container
+ENV PROXY_PORT=50051
+ENV PROXY_CONFIG=config/proxy_config.json
 
 # Set working directory
 WORKDIR /app
@@ -17,33 +18,19 @@ WORKDIR /app
 RUN apt update  && apt upgrade -y
 
 # Set timezone to Europe/Lisbon (Portugal) and install tzdata
-RUN apt -y install tzdata
+RUN apt -y install tzdata && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
 
-# Install ffmpeg and wget
-RUN apt install -y ffmpeg wget
+# Copy proxy code and configuration files
+COPY app_proxy app_proxy
+COPY config config
+COPY grpcs grpcs
 
 # Copy the server-specific requirements and install dependencies
-COPY enviroments/server_requirements.txt requirements.txt
+COPY enviroments/proxy_requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy server code
-COPY app_server app_server
-
-COPY config config
-
-COPY scripts scripts
-
-# Copy shared gRPC proto files if needed
-COPY grpcs/proto proto
-
-COPY model model
-
-RUN sh scripts/download_model.sh
-
-COPY inputs inputs
-
 # Expose the gRPC server port
-EXPOSE ${GRPC_PORT}
+EXPOSE ${PROXY_PORT}
 
 # Set the default command to run the server
-CMD ["python", "app_server"]
+CMD ["python", "app_proxy"]

@@ -13,6 +13,10 @@ NORMALIZER_PORT = os.getenv("NORMALIZER_PORT")
 if NORMALIZER_PORT is None:
     NORMALIZER_PORT = 50053 # Default port if not specified as an environment variable
 
+NORMALIZER_RULES = os.getenv("NORMALIZER_RULES")
+if NORMALIZER_RULES is None:
+    NORMALIZER_RULES = "config/normalization/rules.toml" # Default rules file if not specified as an environment variable
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # Add the parent directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'grpcs'))) # Add the grpcs directory to the system path
 from grpcs import normalizer_pb2, normalizer_pb2_grpc
@@ -20,6 +24,8 @@ from __init__ import Normalizer
 
 class NormalizerService(normalizer_pb2_grpc.NormalizerServiceServicer):
     def __init__(self, args):
+        if args.rules is None:
+            args.rules = NORMALIZER_RULES
         self.normalizer = Normalizer(args.rules)
         
     def Normalize(self, request, context):

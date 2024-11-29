@@ -5,17 +5,28 @@
     "_comment_heartbeatTimeout": "Tempo em segundos que o proxy espera por um heartbeat antes de considerar o servidor como offline",
     "servers": [
         {
-            "priority": 0,
+            "priority": 1000,
             "name": "tts@localhost",
             "address": "localhost",
             "port": 50051
         },
         {
+            "priority": 0,
+            "name": "tts@container",
+            "address": "server_container",
+            "port": 50051
+        },
+        {
             "priority": 1,
-            "name": "tts@sparrow",
-            "address": "sparrow",
+            "name": "tts@container2",
+            "address": "server_container2",
             "port": 50051
         }
     ],
-    "_comment_servers": "Lista de servidores que o proxy pode redirecionar pedidos"
+    "_comment_servers": "Lista de servidores que o proxy pode redirecionar pedidos",
+    "__comment_servers_priority": "Prioridade de redirecionamento. Quanto menor o valor, maior a prioridade",
+    "__comment_servers_name": "Nome do servidor",
+    "__comment_servers_address": "Endereço do servidor",
+    "__comment_servers_port": "Porta do servidor",
+    "___comment_servers_example": "O TTS@localhost tem prioridade 1000, o que significa que será o último a ser redirecionado, por ser usado apenas para testes"
 }
