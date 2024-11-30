@@ -22,10 +22,7 @@ RUN apt -y install tzdata && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && 
 
 # Copy the entire project directory into the container (adjust to only copy required files)
 COPY app_client app_client
-COPY config config
 COPY grpcs grpcs
-COPY model model
-COPY inputs inputs 
 
 # Copy the client-specific requirements file and install dependencies
 COPY enviroments/client_requirements.txt requirements.txt

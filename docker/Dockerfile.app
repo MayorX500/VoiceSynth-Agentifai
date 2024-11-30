@@ -35,4 +35,4 @@ RUN npm install
 EXPOSE ${PORT}
 
 # Start the application
-CMD ["sh", "-c", "./get_ip.sh"]
+CMD ["ash","run.sh"]
