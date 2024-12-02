@@ -26,10 +26,11 @@ import os.path
 import itertools
 import argparse as ap
 import random
+import pyaudio
 
 def save_audio_to_file(audio_data, output_dir, filename, sample_rate=22050, debug=False):
     """Save audio data as a valid WAV file."""
-    os.makedirs(output_dir, exist_ok=True)  # Create directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)
     filepath = os.path.join(output_dir, filename)
     try:
         with wave.open(filepath, 'wb') as wf:
@@ -110,8 +111,6 @@ def add_audio(stub):
     except grpc.RpcError as e:
         print(f"Erro no gRPC: {e.code()} - {e.details()}")
 
-
-
 def remove_audio(stub):
     """Remove an audio from the server."""
     voice_id = int(input("Enter the voice ID to remove: "))
@@ -142,7 +141,61 @@ def synthesize_text(stub, user_token, debug=False, output_dir=None, filename=Non
     pid = os.getpid()  # Get the process ID
     request_counter = itertools.count(random.randint(1, 100000000))  # Counter for audio requests
     request_num = next(request_counter)
-    stream_audio_to_file(stub, text, pid, request_num, user_token, debug=debug, output_dir=output_dir, filename=filename)   
+    stream_audio_to_file(stub, text, pid, request_num, user_token, debug=debug, output_dir=output_dir, filename=filename)
+
+def play_audio(file_path):
+    """Play an audio file using PyAudio."""
+    try:
+        # Open the WAV file
+        with wave.open(file_path, 'rb') as wf:
+            # Initialize PyAudio
+            p = pyaudio.PyAudio()
+            # Open an audio stream
+            stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                            channels=wf.getnchannels(),
+                            rate=wf.getframerate(),
+                            output=True)
+            # Read and play the audio in chunks
+            chunk_size = 1024
+            data = wf.readframes(chunk_size)
+            print(f"Playing audio: {file_path}")
+            while data:
+                stream.write(data)
+                data = wf.readframes(chunk_size)
+            # Cleanup
+            stream.stop_stream()
+            stream.close()
+            p.terminate()
+    except Exception as e:
+        print(f"Error playing audio: {e}")
+
+def list_and_play_audio(output_dir):
+    """List all generated audio files and allow the user to play one."""
+    if not os.path.exists(output_dir):
+        print(f"No audio files found in directory: {output_dir}")
+        return
+    
+    # List all WAV files in the directory
+    audio_files = [f for f in os.listdir(output_dir) if f.endswith(".wav")]
+    if not audio_files:
+        print("No audio files available to play.")
+        return
+    
+    print("Available audio files:")
+    for i, file in enumerate(audio_files, 1):
+        print(f"{i}. {file}")
+    
+    # Ask the user to select a file
+    try:
+        choice = int(input(f"Select a file to play (1-{len(audio_files)}): "))
+        if 1 <= choice <= len(audio_files):
+            file_path = os.path.join(output_dir, audio_files[choice - 1])
+            play_audio(file_path)
+        else:
+            print("Invalid selection.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+
 
 def main(args):
     """
@@ -187,16 +240,21 @@ def main(args):
                 else:
                     print("Invalid option. Please try again.")
         else:
-            # Menu para user_token != 0
+            # Menu for user_token != 0
             print("\nOptions:")
             print("1. Synthesize Audio")
-            print("2. Exit")
+            print("2. Listen to Generated Audio")
+            print("3. Exit")
+
             choice = input("Select an option (1-2): ")
             with grpc.insecure_channel(f"{args.proxy_add}:{CONN_PORT}") as channel:
                 stub = tts_pb2_grpc.TTSServiceStub(channel)
                 if choice == "1":
                     synthesize_text(stub, user_token, debug=args.debug)
                 elif choice == "2":
+                    output_dir = str(os.getpid())  # Directory where the audios are saved
+                    list_and_play_audio(output_dir)
+                elif choice == "3":
                     print("Exiting...")
                     running = False
                 else:
