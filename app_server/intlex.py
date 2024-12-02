@@ -65,7 +65,6 @@ class Model():
         torchaudio.save(path, torch.tensor(wav).unsqueeze(0), 24000)
 
     def generate_audio(self, text, voice_path = None, lang = "pt", **kwargs):
-        # TODO: finish implementing text normalization
         if "gpt_cond_latent" in kwargs.keys() and "speaker_embedding" in kwargs.keys():
             gpt_cond_latent = kwargs["gpt_cond_latent"]
             speaker_embedding = kwargs["speaker_embedding"]

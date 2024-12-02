@@ -13,6 +13,8 @@ services:
     environment:
       - CONN_PORT=50051
       - PROXY_ADD=proxy_container
+    stdin_open: true
+    tty: true
 
   frontend:
     build:
@@ -81,6 +83,15 @@ services:
       dockerfile: docker/Dockerfile.server
     image: tts-agentifai:server
     container_name: server_container
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
     depends_on:
       - normalizer
     networks:
