@@ -2,6 +2,13 @@ import argparse as ap
 from client import main as client_main
 
 def main(args):
+    """
+    Client entry point
+
+    This function is the entry point for the client. It receives the IP address of the server and the user token as
+    arguments and calls the client_main function to start the client.
+    
+    """
     print(f"IP Address: {args.proxy_add}")
     client_main(args)
 

@@ -145,6 +145,12 @@ def synthesize_text(stub, user_token, debug=False, output_dir=None, filename=Non
     stream_audio_to_file(stub, text, pid, request_num, user_token, debug=debug, output_dir=output_dir, filename=filename)   
 
 def main(args):
+    """
+    Client entry point
+
+    This function is the entry point for the client. It receives the IP address of the server and the user token as
+    arguments and starts the client.
+    """
     user_token = args.user_token
     if args.proxy_add is None:
         args.proxy_add = PROXY_ADD

@@ -41,11 +41,11 @@ services:
     depends_on:
       - proxy
     environment:
-      - PROXY_ADD=proxy_container 
+      - PROXY_ADD=proxy_container
       - PROXY_PORT=50051
       - PORT=5000
     ports:
-      - "5001:5000"
+      - "5000:5000"
 
   proxy:
     build:
@@ -62,7 +62,7 @@ services:
       - PROXY_CONFIG=config/proxy_config.json
     ports:
       - "50051:50051"
-  
+
   normalizer:
     build:
       context: .
@@ -93,5 +93,5 @@ services:
 
 networks:
   tts_network:
-    name: tts_network  # Use a static name instead of default directory-based prefix
+    name: tts_network # Use a static name instead of default directory-based prefix
     driver: bridge

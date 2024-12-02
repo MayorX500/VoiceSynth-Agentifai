@@ -1,16 +1,24 @@
 # app.py
+"""
+    Module: API
+
+    This is the main module of the API. It creates a Flask server that listens to requests on the /api/tts endpoint.
+    The server receives a JSON object with the text to be synthesized and the language of the text. The server then
+    sends the text to the gRPC server for synthesis and returns the synthesized audio to the client.
+"""
+
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))  # Add the parent directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..','app_client')))  # Add the app_client directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'grpcs'))) # Add the grpcs directory to the system path
 from grpcs.tts_pb2_grpc import TTSServiceStub
+from app_client import synthesize_text
 
 
 import itertools
 import random
 import grpc
-from app_client import synthesize_text
 from flask import Flask, jsonify, make_response, request, send_file
 from flask_cors import CORS
 
@@ -36,8 +44,14 @@ request_counter = itertools.count(random.randint(1,100000000))  # Counter for au
 app = Flask(__name__)
 CORS(app)  # Permitir requisições de outros domínios
 
+
 @app.route("/api/tts", methods=["POST", "OPTIONS"])
 def tts():
+    """
+    This function handles the POST requests to the /api/tts endpoint. It receives a JSON object with the text to be
+    synthesized and the language of the text. The function then sends the text to the gRPC server for synthesis and
+    returns the synthesized audio to the client.
+    """
     if request.method == "OPTIONS":
         # Return an empty response to indicate that the preflight request is OK
         response = make_response('', 204)

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ash
 
 # Resolve the IP address of 'api' service
 API_IP=$(getent hosts api_container | awk '{ print $1 }')
@@ -9,8 +9,8 @@ API_IP=$(getent hosts api_container | awk '{ print $1 }')
 
 # Check if the IP was found
 if [ -z "$API_IP" ]; then
-    echo "Failed to resolve IP address for 'api'."
-    exit 1
+	echo "Failed to resolve IP address for 'api'."
+	exit 1
 fi
 
 echo "Resolved API IP: $API_IP"

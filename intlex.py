@@ -12,12 +12,13 @@ def clear_memory():
     print("Clearing memory...")
     torch.cuda.empty_cache()
 
+default_kwargs = {"length_penalty":1.0,"repetition_penalty":2.5, "top_k":40, "top_p":0.5, "do_sample":True,"temperature":0.7}
 
 class Model():
     config: dict[str, str]
     model: Xtts
     xtts_config: XttsConfig
-    default_kwargs = {"length_penalty":1.0,"repetition_penalty":2.5, "top_k":40, "top_p":0.5, "do_sample":True,"temperature":0.7}
+    default_kwargs = default_kwargs
 
     def __init__(self, config_file: str):
         print("Loading model...")
@@ -58,7 +59,6 @@ class Model():
             kwargs = self.default_kwargs
         else:
             ## update default values with the provided ones overriding the default ones if necessary
-            
             kwargs = {**self.default_kwargs, **kwargs}
         print("Generating audio...")
         return self.model.inference(text, lang, gpt_cond_latent, speaker_embedding, **kwargs)
@@ -86,12 +86,23 @@ def main(args):
     model.save_audio(args.output, wav)
     clear_memory()
 
+def parse_kwargs(kwargs_str):
+    try:
+        return json.loads(kwargs_str)
+    except json.JSONDecodeError as e:
+        raise ap.ArgumentTypeError(f"Invalid JSON for --kwargs: {e}")
+
 if __name__ == "__main__":
     parser = ap.ArgumentParser()
     parser.add_argument("text", type=str, help="Text to be synthesized")
     parser.add_argument("configuration", type=str, help="Path to the model configuration file")
     parser.add_argument("--lang", type=str, choices=["pt","en", "es", "fr", "de"], default="pt", help="Language of the text")   
     parser.add_argument("--output", type=str, default="output.wav", help="Output wav file")
-    parser.add_argument("--kwargs", type=dict, default={"length_penalty":1.0,"repetition_penalty":2.5, "top_k":20, "top_p":0.95, "do_sample":True,"temperature":0.5}, help="Inference extra arguments")
+    parser.add_argument(
+    "--kwargs",
+    type=parse_kwargs,
+    default=default_kwargs,
+    help="Inference extra arguments as a JSON string"
+)
     args = parser.parse_args()
     main(args)

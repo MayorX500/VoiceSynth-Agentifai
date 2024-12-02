@@ -35,4 +35,4 @@ RUN npm install
 EXPOSE ${PORT}
 
 # Start the application
-CMD ["ash","run.sh"]
+CMD ["ash" , "run.sh"]
