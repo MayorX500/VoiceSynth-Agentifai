@@ -21,6 +21,10 @@ RUN apt update  && apt upgrade -y
 # Set timezone to Europe/Lisbon (Portugal) and install tzdata
 RUN apt -y install tzdata && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
 
+# Add GCC for pyaudio
+# Add ALSA for pyaudio
+RUN apt-get install -y gcc portaudio19-dev libasound-dev
+
 # Copy the entire project directory into the container (adjust to only copy required files)
 COPY app_api app_api
 COPY app_client app_client

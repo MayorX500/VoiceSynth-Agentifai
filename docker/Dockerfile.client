@@ -22,7 +22,6 @@ RUN apt -y install tzdata && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && 
 
 # Add GCC for pyaudio
 # Add ALSA for pyaudio
-
 RUN apt-get install -y gcc portaudio19-dev libasound-dev
 
 # Copy the entire project directory into the container (adjust to only copy required files)
