@@ -58,7 +58,9 @@ services:
     networks:
       - tts_network
     depends_on:
-      - server
+      - server_1
+      - server_2
+      - server_3
     environment:
       - PROXY_PORT=50051
       - PROXY_CONFIG=config/proxy_config.json
@@ -77,12 +79,62 @@ services:
       - NORMALIZER_PORT=50051
       - NORMALIZER_RULES=config/normalization/rules.toml
 
-  server:
+  server_1:
     build:
       context: .
       dockerfile: docker/Dockerfile.server
     image: tts-agentifai:server
-    container_name: server_container
+    container_name: server_container1
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+    depends_on:
+      - normalizer
+    networks:
+      - tts_network
+    environment:
+      - SERVER_PORT=50051
+      - SERVER_CONFIG=config/intlex_config.json
+      - NORMALIZER_IPADDRESS=normalizer_container
+      - NORMALIZER_PORT=50051
+
+  server_2:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.server
+    image: tts-agentifai:server
+    container_name: server_container2
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+    depends_on:
+      - normalizer
+    networks:
+      - tts_network
+    environment:
+      - SERVER_PORT=50051
+      - SERVER_CONFIG=config/intlex_config.json
+      - NORMALIZER_IPADDRESS=normalizer_container
+      - NORMALIZER_PORT=50051
+
+  server_3:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.server
+    image: tts-agentifai:server
+    container_name: server_container3
     runtime: nvidia
     deploy:
       resources:

@@ -1,23 +1,23 @@
 {
-   "normalization_config":"config/normalization_rules.toml",
-   "_comment_normalization_config":"Caminho para o ficheiro de configuração de normalização a ser usado pelo modelo",
-   "audio_path":{
-      "pt":"inputs/voices/ai-female-voice.wav",
-      "en":"inputs/voices/eng_morgan_freeman.wav"
-   },
-   "_comment_audio_path":"Vozes default de entrada para a conversão, o campo é um dicionário com as chaves sendo os idiomas das vozes e os valores sendo os caminhos para os ficheiros de áudio",
-   "storage_directory":"inputs/voices",
-   "_comment_storage_directory":"Caminho para a pasta onde os ficheiros de áudio de referencia estão guardados",
-   "xtts_config":"model/run/training/GPT_XTTS_Finetuned/config.json",
-   "_comment_xtts_config":"Caminho para o ficheiro de configuração do XTTS a ser usado pelo modelo treinado",
-   "model":{
-      "checkpoint_dir":null,
-      "eval":true,
-      "strict":true,
-      "speaker_file_path":null,
-      "checkpoint_path":"model/run/training/GPT_XTTS_Finetuned/best_model.pth",
-      "vocab_path":"model/run/training/XTTS_v2.0_original_model_files/vocab.json",
-      "use_deepspeed":false
-   },
-   "_comment_model":"Configuração do modelo a ser usado para a conversão, os campos estão de acordo com o modelo treinado para facilitar a configuração"
+  "normalization_config": "config/normalization_rules.toml",
+  "_comment_normalization_config": "Caminho para o ficheiro de configuração de normalização a ser usado pelo modelo",
+  "audio_path": {
+    "pt": "inputs/voices/ai-female-voice.wav",
+    "en": "inputs/voices/eng_morgan_freeman.wav"
+  },
+  "_comment_audio_path": "Vozes default de entrada para a conversão, o campo é um dicionário com as chaves sendo os idiomas das vozes e os valores sendo os caminhos para os ficheiros de áudio",
+  "storage_directory": "inputs/voices",
+  "_comment_storage_directory": "Caminho para a pasta onde os ficheiros de áudio de referencia estão guardados",
+  "xtts_config": "model/run/training/GPT_XTTS_Finetuned/config.json",
+  "_comment_xtts_config": "Caminho para o ficheiro de configuração do XTTS a ser usado pelo modelo treinado",
+  "model": {
+    "checkpoint_dir": null,
+    "eval": true,
+    "strict": true,
+    "speaker_file_path": null,
+    "checkpoint_path": "model/run/training/GPT_XTTS_Finetuned/best_model.pth",
+    "vocab_path": "model/run/training/XTTS_v2.0_original_model_files/vocab.json",
+    "use_deepspeed": false
+  },
+  "_comment_model": "Configuração do modelo a ser usado para a conversão, os campos estão de acordo com o modelo treinado para facilitar a configuração"
 }
