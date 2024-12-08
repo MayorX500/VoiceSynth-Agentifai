@@ -6,8 +6,8 @@
   "servers": [
     {
       "priority": 0,
-      "name": "tts@container",
-      "address": "server_container",
+      "name": "tts@container1",
+      "address": "server_container1",
       "port": 50051
     },
     {

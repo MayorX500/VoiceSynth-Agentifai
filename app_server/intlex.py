@@ -14,7 +14,7 @@ class Model():
     config: dict[str, str]
     model: Xtts
     xtts_config: XttsConfig
-    default_kwargs = {"length_penalty":1.0,"repetition_penalty":2.5, "top_k":40, "top_p":0.5, "do_sample":True,"temperature":0.7}
+    default_kwargs = {"length_penalty":1.0,"repetition_penalty":2.5, "top_k":100, "top_p":0.7, "do_sample":True,"temperature":0.01}
 
     def __init__(self, config_file: str):
         print("Loading model...")
