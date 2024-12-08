@@ -1,0 +1,36 @@
+# Use a Python base image
+FROM python:3.12-slim
+
+# Set environment variables to optimize Python
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Lisbon
+
+# This is set in the docker-compose file or when running the container
+ENV NORMALIZER_SERVICE_PORT=50051
+ENV NORMALIZER_SERVICE_RULES=config/normalization/rules.toml
+
+# Set working directory
+WORKDIR /app
+
+# Update apt
+RUN apt update  && apt upgrade -y
+
+# Set timezone to Europe/Lisbon (Portugal) and install tzdata
+RUN apt -y install tzdata && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
+
+# Copy normalizer code and configuration files
+COPY app_normalizer app_normalizer
+COPY config config
+COPY grpcs grpcs
+
+# Copy the server-specific requirements and install dependencies
+COPY enviroments/normalizer_requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose the gRPC server port
+EXPOSE ${NORMALIZER_PORT}
+
+# Set the default command to run the server
+CMD ["python", "app_normalizer"]

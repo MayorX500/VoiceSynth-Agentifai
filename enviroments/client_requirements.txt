@@ -1,7 +1,6 @@
-cffi==1.17.1
 grpcio==1.68.0
 grpcio-tools==1.68.0
-protobuf==5.28.3
-pycparser==2.22
+protobuf==5.29.0
+PyAudio==0.2.14
+python-dotenv==1.0.1
 setuptools==75.6.0
-soundfile==0.12.1

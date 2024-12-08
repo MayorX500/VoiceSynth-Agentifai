@@ -1,0 +1,4 @@
+Hello and welcome to the Smart Home System.
+The current temperature is  degrees Celsius.
+Let me give you a quick update:
+We hope you have a great day!

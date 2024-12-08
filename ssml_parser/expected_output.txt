@@ -1,0 +1,6 @@
+"Hello and welcome to the Smart Home System. 
+ Let me give you a quick update:
+ [Pause for 500 milliseconds] 
+ The current temperature is twenty-two degrees Celsius.
+ The humidity level is currently at sixty percent." (Spoken slower and with higher pitch)
+ "We hope you have a great day!"
