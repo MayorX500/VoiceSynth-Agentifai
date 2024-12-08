@@ -10,13 +10,13 @@ from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from a .env file
 
 ## Load the proxy port from the environment variables
-PROXY_PORT = os.getenv("PROXY_PORT")
-if PROXY_PORT is None:
-    PROXY_PORT = 50052 # Default port if not specified as an environment variable
+PROXY_SERVER_PORT = os.getenv("PROXY_SERVER_PORT")
+if PROXY_SERVER_PORT is None:
+    PROXY_SERVER_PORT = 50052 # Default port if not specified as an environment variable
 
-PROXY_CONFIG = os.getenv("PROXY_CONFIG")
-if PROXY_CONFIG is None:
-    PROXY_CONFIG = "config/proxy_config.json" # Default configuration file if not specified as an environment variable
+PROXY_SERVER_CONFIG = os.getenv("PROXY_SERVER_CONFIG")
+if PROXY_SERVER_CONFIG is None:
+    PROXY_SERVER_CONFIG = "config/proxy_config.json" # Default configuration file if not specified as an environment variable
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # Add the parent directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'grpcs'))) # Add the grpcs directory to the system path
@@ -225,13 +225,13 @@ class TTSProxy(tts_pb2_grpc.TTSServiceServicer):
 
 def serve(args):
     if args.config_file is None:
-        args.config_file = PROXY_CONFIG
+        args.config_file = PROXY_SERVER_CONFIG
     # The address where this proxy server will listen
-    proxy_address = f'[::]:{PROXY_PORT}'
+    proxy_address = f'[::]:{PROXY_SERVER_PORT}'
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=20))
     tts_pb2_grpc.add_TTSServiceServicer_to_server(TTSProxy(args), server)
     server.add_insecure_port(proxy_address)
-    print(f"Proxy server running on port {PROXY_PORT}...")
+    print(f"Proxy server running on port {PROXY_SERVER_PORT}...")
     server.start()
     server.wait_for_termination()
 

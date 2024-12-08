@@ -9,13 +9,13 @@ from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from a .env file
 
 ## Load the proxy port from the environment variables
-NORMALIZER_PORT = os.getenv("NORMALIZER_PORT")
-if NORMALIZER_PORT is None:
-    NORMALIZER_PORT = 50053 # Default port if not specified as an environment variable
+NORMALIZER_SERVICE_PORT = os.getenv("NORMALIZER_SERVICE_PORT")
+if NORMALIZER_SERVICE_PORT is None:
+    NORMALIZER_SERVICE_PORT = 50053 # Default port if not specified as an environment variable
 
-NORMALIZER_RULES = os.getenv("NORMALIZER_RULES")
-if NORMALIZER_RULES is None:
-    NORMALIZER_RULES = "config/normalization/rules.toml" # Default rules file if not specified as an environment variable
+NORMALIZER_SERVICE_RULES = os.getenv("NORMALIZER_SERVICE_RULES")
+if NORMALIZER_SERVICE_RULES is None:
+    NORMALIZER_SERVICE_RULES = "config/normalization/rules.toml" # Default rules file if not specified as an environment variable
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # Add the parent directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'grpcs'))) # Add the grpcs directory to the system path
@@ -25,7 +25,7 @@ from __init__ import Normalizer
 class NormalizerService(normalizer_pb2_grpc.NormalizerServiceServicer):
     def __init__(self, args):
         if args.rules is None:
-            args.rules = NORMALIZER_RULES
+            args.rules = NORMALIZER_SERVICE_RULES
         self.normalizer = Normalizer(args.rules)
         
     def Normalize(self, request, context):
@@ -35,8 +35,8 @@ class NormalizerService(normalizer_pb2_grpc.NormalizerServiceServicer):
 def serve(args):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     normalizer_pb2_grpc.add_NormalizerServiceServicer_to_server(NormalizerService(args), server)
-    server.add_insecure_port(f'[::]:{NORMALIZER_PORT}')
-    print(f"Normalizer server running on port {NORMALIZER_PORT}...")
+    server.add_insecure_port(f'[::]:{NORMALIZER_SERVICE_PORT}')
+    print(f"Normalizer server running on port {NORMALIZER_SERVICE_PORT}...")
     server.start()
     server.wait_for_termination()
 

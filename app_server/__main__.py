@@ -28,13 +28,13 @@ SERVER_CONFIG = os.getenv("SERVER_CONFIG")
 if SERVER_CONFIG is None:
     SERVER_CONFIG = "config/intlex_config.json" # Default port if not specified as an environment variable
 
-NORMALIZER_IPADDRESS = os.getenv("NORMALIZER_IPADDRESS")
-if NORMALIZER_IPADDRESS is None:
-    NORMALIZER_IPADDRESS = "localhost" # Default port if not specified as an environment variable
+NORMALIZER_SERVICE_ADDRESS = os.getenv("NORMALIZER_SERVICE_ADDRESS")
+if NORMALIZER_SERVICE_ADDRESS is None:
+    NORMALIZER_SERVICE_ADDRESS = "localhost" # Default port if not specified as an environment variable
 
-NORMALIZER_PORT = os.getenv("NORMALIZER_PORT")
-if NORMALIZER_PORT is None:
-    NORMALIZER_PORT = 50053 # Default port if not specified as an environment variable
+NORMALIZER_SERVICE_PORT = os.getenv("NORMALIZER_SERVICE_PORT")
+if NORMALIZER_SERVICE_PORT is None:
+    NORMALIZER_SERVICE_PORT = 50053 # Default port if not specified as an environment variable
 
 from db import models
 
@@ -103,7 +103,7 @@ class TTSService(tts_pb2_grpc.TTSServiceServicer):
             
             # Establish a connection to the normalizer service
             try:
-                with grpc.insecure_channel(f'{NORMALIZER_IPADDRESS}:{NORMALIZER_PORT}') as channel:
+                with grpc.insecure_channel(f'{NORMALIZER_SERVICE_ADDRESS}:{NORMALIZER_SERVICE_PORT}') as channel:
                     normalizer_stub = normalizer_pb2_grpc.NormalizerServiceStub(channel)
 
                     # Normalize each text segment

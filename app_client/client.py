@@ -7,14 +7,14 @@ from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from a .env file
 
 ## Connection port
-CONN_PORT = os.getenv("CONN_PORT")
-if not CONN_PORT:
-    CONN_PORT = 50051 # Default proxy port if not specified in the environment variables
+PROXY_SERVER_PORT = os.getenv("PROXY_SERVER_PORT")
+if not PROXY_SERVER_PORT:
+    PROXY_SERVER_PORT = 50051 # Default proxy port if not specified in the environment variables
 
 ## IP address
-PROXY_ADD = os.getenv("PROXY_ADD")
-if not PROXY_ADD:
-    PROXY_ADD = "localhost" # Default IP address if not specified in the environment variables
+PROXY_SERVER_ADDRESS = os.getenv("PROXY_SERVER_ADDRESS")
+if not PROXY_SERVER_ADDRESS:
+    PROXY_SERVER_ADDRESS = "localhost" # Default IP address if not specified in the environment variables
 
 import time
 import grpc
@@ -206,7 +206,7 @@ def main(args):
     """
     user_token = args.user_token
     if args.proxy_add is None:
-        args.proxy_add = PROXY_ADD
+        args.proxy_add = PROXY_SERVER_ADDRESS
     running = True
     while running:
         if user_token == "0":
@@ -220,7 +220,7 @@ def main(args):
             print("6. Disassociate Audio from User")
             print("7. Exit")
             choice = input("Select an option (1-5): ")
-            with grpc.insecure_channel(f"{args.proxy_add}:{CONN_PORT}") as channel:
+            with grpc.insecure_channel(f"{args.proxy_add}:{PROXY_SERVER_PORT}") as channel:
                 stub = tts_pb2_grpc.TTSServiceStub(channel)
                 if choice == "1":
                     create_user(stub)
@@ -247,7 +247,7 @@ def main(args):
             print("3. Exit")
 
             choice = input("Select an option (1-2): ")
-            with grpc.insecure_channel(f"{args.proxy_add}:{CONN_PORT}") as channel:
+            with grpc.insecure_channel(f"{args.proxy_add}:{PROXY_SERVER_PORT}") as channel:
                 stub = tts_pb2_grpc.TTSServiceStub(channel)
                 if choice == "1":
                     synthesize_text(stub, user_token, debug=args.debug)
@@ -263,7 +263,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = ap.ArgumentParser()
-    parser.add_argument("proxy_add", nargs='?', type=str, help="IP address of the server", default=PROXY_ADD)
+    parser.add_argument("proxy_add", nargs='?', type=str, help="IP address of the server", default=PROXY_SERVER_ADDRESS)
     parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode", default=False)
     args = parser.parse_args()
     main(args)

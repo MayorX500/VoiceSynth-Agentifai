@@ -27,14 +27,14 @@ from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from a .env file
 
 ## Connection port
-PROXY_PORT = os.getenv("PROXY_PORT")
-if not PROXY_PORT:
-    PROXY_PORT = 50051 # Default proxy port if not specified in the environment variables
+PROXY_SERVER_PORT = os.getenv("PROXY_SERVER_PORT")
+if not PROXY_SERVER_PORT:
+    PROXY_SERVER_PORT = 50051 # Default proxy port if not specified in the environment variables
 
 ## IP address
-PROXY_ADD = os.getenv("PROXY_ADD")
-if not PROXY_ADD:
-    PROXY_ADD = "localhost" # Default IP address if not specified in the environment variables
+PROXY_SERVER_ADDRESS = os.getenv("PROXY_SERVER_ADDRESS")
+if not PROXY_SERVER_ADDRESS:
+    PROXY_SERVER_ADDRESS = "localhost" # Default IP address if not specified in the environment variables
 
 PORT = os.getenv("PORT")
 if not PORT:
@@ -68,7 +68,7 @@ def tts():
     user_token = data.get("user_token", "1")
 
     if text:
-        with grpc.insecure_channel(f"{PROXY_ADD}:{PROXY_PORT}") as channel:
+        with grpc.insecure_channel(f"{PROXY_SERVER_ADDRESS}:{PROXY_SERVER_PORT}") as channel:
             stub = TTSServiceStub(channel)
             request_num = next(request_counter)
             synthesize_text(stub, user_token, text=text, output_dir="app_api/outputs", filename=f"generated-{request_num}.wav", debug=True)       
