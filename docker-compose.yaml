@@ -8,11 +8,9 @@ services:
     container_name: client_container
     networks:
       - tts_network
-    depends_on:
-      - proxy
     environment:
-      - CONN_PORT=50051
-      - PROXY_ADD=proxy_container
+      - PROXY_SERVER_PORT=50051
+      - PROXY_SERVER_ADDRESS=proxy_container
     stdin_open: true
     tty: true
 
@@ -43,8 +41,8 @@ services:
     depends_on:
       - proxy
     environment:
-      - PROXY_ADD=proxy_container
-      - PROXY_PORT=50051
+      - PROXY_SERVER_ADDRESS=proxy_container
+      - PROXY_SERVER_PORT=50051
       - PORT=5000
     ports:
       - "5000:5000"
@@ -62,8 +60,8 @@ services:
       - server_2
       - server_3
     environment:
-      - PROXY_PORT=50051
-      - PROXY_CONFIG=config/proxy_config.json
+      - PROXY_SERVER_PORT=50051
+      - PROXY_SERVER_CONFIG=config/proxy_config.json
     ports:
       - "50051:50051"
     command: ["python", "app_proxy", "-d"]
@@ -77,8 +75,8 @@ services:
     networks:
       - tts_network
     environment:
-      - NORMALIZER_PORT=50051
-      - NORMALIZER_RULES=config/normalization/rules.toml
+      - NORMALIZER_SERVICE_PORT=50051
+      - NORMALIZER_SERVICE_RULES=config/normalization/rules.toml
 
   server_1:
     build:
@@ -102,8 +100,8 @@ services:
     environment:
       - SERVER_PORT=50051
       - SERVER_CONFIG=config/intlex_config.json
-      - NORMALIZER_IPADDRESS=normalizer_container
-      - NORMALIZER_PORT=50051
+      - NORMALIZER_SERVICE_ADDRESS=normalizer_container
+      - NORMALIZER_SERVICE_PORT=50051
 
   server_2:
     build:
@@ -127,8 +125,8 @@ services:
     environment:
       - SERVER_PORT=50051
       - SERVER_CONFIG=config/intlex_config.json
-      - NORMALIZER_IPADDRESS=normalizer_container
-      - NORMALIZER_PORT=50051
+      - NORMALIZER_SERVICE_ADDRESS=normalizer_container
+      - NORMALIZER_SERVICE_PORT=50051
 
   server_3:
     build:
@@ -152,8 +150,8 @@ services:
     environment:
       - SERVER_PORT=50051
       - SERVER_CONFIG=config/intlex_config.json
-      - NORMALIZER_IPADDRESS=normalizer_container
-      - NORMALIZER_PORT=50051
+      - NORMALIZER_SERVICE_ADDRESS=normalizer_container
+      - NORMALIZER_SERVICE_PORT=50051
 
 networks:
   tts_network:

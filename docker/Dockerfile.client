@@ -8,8 +8,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Lisbon
 
 # This is set in the docker-compose file or when running the container
-ENV CONN_PORT=50051
-ENV PROXY_ADD=localhost
+ENV PROXY_SERVER_ADDRESS=localhost 
+ENV PROXY_SERVER_PORT=50051
 
 # Set working directory
 WORKDIR /app

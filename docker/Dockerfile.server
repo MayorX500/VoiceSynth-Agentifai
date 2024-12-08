@@ -10,8 +10,8 @@ ENV TZ=Europe/Lisbon
 ## Load the environment variables required for the server
 ENV SERVER_PORT=50051
 ENV SERVER_CONFIG=config/intlex_config.json
-ENV NORMALIZER_IPADDRESS=localhost
-ENV NORMALIZER_PORT=50051
+ENV NORMALIZER_SERVICE_ADDRESS=localhost
+ENV NORMALIZER_SERVICE_PORT=50051
 
 # Set working directory
 WORKDIR /app
