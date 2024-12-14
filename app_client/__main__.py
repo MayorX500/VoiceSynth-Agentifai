@@ -9,7 +9,7 @@ def main(args):
     arguments and calls the client_main function to start the client.
     
     """
-    print(f"IP Address: {args.proxy_add}")
+    print(f"IP Address: {args.proxy_add if args.proxy_add else 'ENVIROMENT VARIABLE'}")
     client_main(args)
 
 

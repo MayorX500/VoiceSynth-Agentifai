@@ -1,0 +1,1471 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Intlex documentation</title>
+        <meta name="robots" content="noindex" />
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = null;
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">2.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="app_flow.html"><strong aria-hidden="true">3.</strong> App Flow</a></li><li class="chapter-item expanded "><a href="requirements.html"><strong aria-hidden="true">4.</strong> Requirements</a></li><li class="chapter-item expanded "><a href="installation/index.html"><strong aria-hidden="true">5.</strong> How to Install</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="installation/docker.html"><strong aria-hidden="true">5.1.</strong> Docker</a></li><li class="chapter-item expanded "><a href="installation/standalone.html"><strong aria-hidden="true">5.2.</strong> Standalone</a></li></ol></li><li class="chapter-item expanded "><a href="usage/index.html"><strong aria-hidden="true">6.</strong> How to Use</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="usage/docker.html"><strong aria-hidden="true">6.1.</strong> Docker</a></li><li class="chapter-item expanded "><a href="usage/standalone.html"><strong aria-hidden="true">6.2.</strong> Standalone</a></li></ol></li><li class="chapter-item expanded "><a href="updating.html"><strong aria-hidden="true">7.</strong> How to Update</a></li><li class="chapter-item expanded "><a href="components/index.html"><strong aria-hidden="true">8.</strong> Components</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="components/app_standalone.html"><strong aria-hidden="true">8.1.</strong> Standalone</a></li><li class="chapter-item expanded "><a href="components/app.html"><strong aria-hidden="true">8.2.</strong> App Frontend</a></li><li class="chapter-item expanded "><a href="components/app_api.html"><strong aria-hidden="true">8.3.</strong> App API</a></li><li class="chapter-item expanded "><a href="components/app_client.html"><strong aria-hidden="true">8.4.</strong> App Client</a></li><li class="chapter-item expanded "><a href="components/app_normalizer.html"><strong aria-hidden="true">8.5.</strong> App Normalizer</a></li><li class="chapter-item expanded "><a href="components/app_proxy.html"><strong aria-hidden="true">8.6.</strong> App Proxy</a></li><li class="chapter-item expanded "><a href="components/app_server.html"><strong aria-hidden="true">8.7.</strong> App Server</a></li></ol></li><li class="chapter-item expanded "><a href="improvements.html"><strong aria-hidden="true">9.</strong> Improvements</a></li><li class="chapter-item expanded "><a href="closing.html"><strong aria-hidden="true">10.</strong> Closing Notes</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Intlex documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <img width="150" src="images/EEUM_logo_EN.jpg"> 
+<h1 id="pi24---real-time-speech-synthesis"><a class="header" href="#pi24---real-time-speech-synthesis">PI24 - Real-Time Speech Synthesis</a></h1>
+<p><strong>Authors:</strong></p>
+<ul>
+<li><a href="https://github.com/5ditto">Beatriz Monteiro</a></li>
+<li><a href="https://github.com/ddu72">Daniel Du</a></li>
+<li><a href="https://github.com/danielfurtado11">Daniel Furtado</a></li>
+<li><a href="https://github.com/MayorX500">Miguel Gomes</a></li>
+<li><a href="https://github.com/MoisesA14">Moisés Antunes</a></li>
+<li><a href="https://github.com/telmomaciel9">Telmo Maciel</a></li>
+</ul>
+<h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>The goal of this project is to develop a low-latency, high-quality audio synthesis real-time text-to-speech (TTS) system. 
+The project is set up to take advantage of microservices concepts in order to facilitate modularity, scalability, and adaptability.
+The architecture guarantees effective functioning and facilitates future extensions by breaking the system up into discrete parts, each of which is in charge of carrying out particular functions.</p>
+<p>The system was designed to be able to run on a large variety of hardware, from small devices to large cloud servers.</p>
+<h2 id="project-scope"><a class="header" href="#project-scope">Project Scope</a></h2>
+<p>This project's main objective was to create a reliable TTS system that could perform the following tasks:</p>
+<h5 id="process-text-inputs"><a class="header" href="#process-text-inputs">Process text inputs:</a></h5>
+<ul>
+<li>Could accept inputs in the form of structured SSML (Speech Synthesis Markup Language) or natural language text.</li>
+<li>Prepares the input for synthesis by apllying advanced normalization and techniques. </li>
+</ul>
+<h5 id="generate-real-time-audio"><a class="header" href="#generate-real-time-audio">Generate Real-Time Audio:</a></h5>
+<ul>
+<li>Capable of producing audio streams with minimal latency.</li>
+<li>Ensures high-quality audio output, with a focus on naturalness and intelligibility.</li>
+</ul>
+<h5 id="supports-modular-deployment"><a class="header" href="#supports-modular-deployment">Supports Modular Deployment:</a></h5>
+<ul>
+<li>The system is designed to be modular, allowing for easy integration of new components and updates on existing ones.</li>
+<li>The system can be deployed in a microservices architecture, allowing for scalability and adaptability.</li>
+</ul>
+<h5 id="utilizability"><a class="header" href="#utilizability">Utilizability:</a></h5>
+<ul>
+<li>The system is designed to be usable by a wide range of users, from developers to end-users.</li>
+<li>The system offers a simple API for easy integration into other systems.</li>
+</ul>
+<h5 id="facilitates-customization"><a class="header" href="#facilitates-customization">Facilitates Customization:</a></h5>
+<ul>
+<li>The system is designed to be easily customizable, allowing for the integration of new voices, languages, and other features.</li>
+<li>The system is designed to be easily extendable, allowing for the integration of new components and features.</li>
+</ul>
+<p>The project was designed to meet real-world demands for customizable, efficient, and scalable voice synthesis, making it ideal for applications such as virtual assistants, customer service bots, and accessible technology solutions.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="architecture"><a class="header" href="#architecture">Architecture</a></h1>
+<p>The system was designed to be simple, modular, and scalable. The architecture is based on a microservices approach, with each component responsible for a specific task. This allows for easy integration of new components and updates on existing ones. The system is designed to be able to run on a large variety of hardware, from small devices to large cloud servers.</p>
+<p><a name="architecture-image"></a>
+<img src="images/architecture.png" alt="Architecture" /></p>
+<p>In the diagram above, it is possible to see the main components of the system:</p>
+<ul>
+<li><strong>Black Arrows</strong>: Represent the flow of &quot;text&quot; between the components.</li>
+<li><strong>Blue Arrows</strong>: Represent the flow of audio between the components.</li>
+<li><strong>Components</strong>:
+<ul>
+<li><a href="components/app.html"><strong>Frontend</strong></a>: The user interface, responsible for sending requests to the api and displaying the results.</li>
+<li><a href="components/app_api.html"><strong>API</strong></a>: One of the possible interfaces of the system, responsible for processing requests from the frontend and sending them to the server.</li>
+<li><a href="components/app_client.html"><strong>Client</strong></a>: The client is a Terminal-based interface that allows users to interact with the system without being dependent on the API.</li>
+<li><a href="components/app_proxy.html"><strong>Proxy</strong></a>: The proxy is responsible for routing requests to the server and returning the results to the client and/or API.</li>
+<li><a href="components/app_server.html"><strong>Server</strong></a>: The server is responsible for processing requests from the proxy and generating the audio output.</li>
+<li><a href="components/app_normalizer.html"><strong>Normalizer</strong></a>: The normalizer is responsible for processing the input text and preparing it for synthesis.</li>
+</ul>
+</li>
+</ul>
+<h2 id="docker"><a class="header" href="#docker">Docker</a></h2>
+<p>Each component is incapsulated in a Docker container, allowing for easy deployment and scaling. The provided docker-compose file allows for easy deployment of the system on a single machine.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="flow"><a class="header" href="#flow">Flow</a></h1>
+<p>The system, as designed, is composed of several components, each responsible for a specific task. </p>
+<h2 id="app-flow"><a class="header" href="#app-flow">App Flow</a></h2>
+<p>Based on the <a href="architecture.html#architecture-image">architecture diagram</a>, the flow of the system is as follows:</p>
+<h4 id="frontend-api-flow"><a class="header" href="#frontend-api-flow">Frontend API flow:</a></h4>
+<ul>
+<li>
+<p>The user interacts with the system through the <a href="components/app.html">Frontend</a>, which sends requests to the <code>API</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_api.html">API</a> processes the requests and sends them to the <code>Proxy</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_proxy.html">Proxy</a> routes the requests to an available <code>Server</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_server.html">Server</a> sends the text input to the <code>Normalizer</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_normalizer.html">Normalizer</a> processes the input and prepares it for synthesis and sends it back to the <code>Server</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_server.html">Server</a> uses the normalized text to generate the audio. Then sends it back to the <code>Proxy</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_proxy.html">Proxy</a> returns the results to the <code>API</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_api.html">API</a> sends the results back to the <code>Frontend</code>, which displays the results to the user.</p>
+</li>
+</ul>
+<h4 id="client-flow"><a class="header" href="#client-flow">Client flow:</a></h4>
+<ul>
+<li>
+<p>The user interacts with the system through the <a href="components/app_client.html">Client</a> , which sends requests directly to the <code>Proxy</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_proxy.html">Proxy</a> routes the requests to an available <code>Server</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_server.html">Server</a> sends the text input to the <code>Normalizer</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_normalizer.html">Normalizer</a> processes the input and prepares it for synthesis and sends it back to the <code>Server</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_server.html">Server</a> uses the normalized text to generate the audio. Then sends it back to the <code>Proxy</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_proxy.html">Proxy</a> returns the results to the <code>Client</code>.</p>
+</li>
+<li>
+<p>The <a href="components/app_client.html">Client</a> displays the results to the user.</p>
+</li>
+</ul>
+<h2 id="data-flow"><a class="header" href="#data-flow">Data Flow</a></h2>
+<p>The flow of data between these components is crucial for the system to function correctly. The following diagram illustrates the flow of data between the components of the system:</p>
+<p><img src="images/data_flow.png" alt="Data Flow" /></p>
+<p>As the diagram shows, the data flow is as follows:</p>
+<h4 id="1-input"><a class="header" href="#1-input">1. Input:</a></h4>
+<p>The system accepts two types of inputs:</p>
+<ul>
+<li>
+<p>Natural Text: Plain text provided by the user.</p>
+</li>
+<li>
+<p>SSML Text: Structured input using Speech Synthesis Markup Language (not currently implemented).</p>
+</li>
+</ul>
+<h4 id="2-normalizer"><a class="header" href="#2-normalizer">2. Normalizer:</a></h4>
+<p>The input text is sent to the Normalizer, which standardizes it for further processing. For example:</p>
+<ul>
+<li>Expanding abbreviations.</li>
+<li>Converting numbers into words.</li>
+</ul>
+<h4 id="3-tts-model"><a class="header" href="#3-tts-model">3. TTS Model:</a></h4>
+<p>The normalized text is then processed by the TTS Model, which converts the text into audio data. This includes:</p>
+<ul>
+<li>Generating phonetic representations.</li>
+<li>Applying prosody to ensure naturalness.</li>
+</ul>
+<h4 id="4-output"><a class="header" href="#4-output">4. Output:</a></h4>
+<p>The audio data is finalized and saved as an output file (e.g., .wav or .mp3), ready for playback and/or further processing.</p>
+<h3 id="current-limitations"><a class="header" href="#current-limitations">Current Limitations</a></h3>
+<p><strong>SSML Support</strong>: While the diagram includes an SSML Parser, this functionality is not yet implemented. All inputs must currently be provided as plain text.</p>
+<p><strong>Streaming</strong>: The system generates complete audio files and sends them directly to the user, but streaming capabilities could be added in future iterations.</p>
+<h2 id="communication"><a class="header" href="#communication">Communication</a></h2>
+<h3 id="main-components-communication"><a class="header" href="#main-components-communication">Main Components Communication</a></h3>
+<p>To handle the comunications between the main components, the system uses <code>gRPC</code> as the communication protocol. This allows for fast and efficient communication between the components, ensuring that the system can handle the real-time requirements of the audio synthesis process.</p>
+<p>The use of <code>gRPC</code> also allows for a technology-agnostic approach to the system, as it can be used with a wide variety of programming languages and platforms.</p>
+<h3 id="frontend-api-communication"><a class="header" href="#frontend-api-communication">Frontend API Communication</a></h3>
+<p>To handle the communication between the <strong>Frontend</strong> and the <strong>API</strong>, the system uses <code>HTTP</code> as the communication protocol. This allows for easy integration with web-based applications and ensures that the system can be easily accessed by a wide variety of devices.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="requirements"><a class="header" href="#requirements">Requirements</a></h1>
+<p>The system requirements define the functional and non-functional aspects that the text-to-audio conversion system must meet. These requirements guide the development process, ensuring that the system meets the user's needs and expectations.</p>
+<h2 id="functional-requirements"><a class="header" href="#functional-requirements">Functional Requirements</a></h2>
+<ol>
+<li>
+<p><strong>Text-to-Audio Conversion</strong>: The system must generate audible audio from text inputs.</p>
+</li>
+<li>
+<p><strong>Integration</strong>: The system must integrate seamlessly with existing virtual assistant infrastructures.</p>
+</li>
+<li>
+<p><strong>Language Support</strong>: The system must support generating audio in Portuguese.</p>
+</li>
+<li>
+<p><strong>Voice Customization</strong>: Users must be able to choose and customize voices for their needs.</p>
+</li>
+<li>
+<p><strong>Dynamic Intonation</strong>: The system must adjust intonation to emphasize keywords in responses.</p>
+</li>
+<li>
+<p><strong>Emotion Adaptation</strong>: The system should modify the voice's tone based on conversational context.</p>
+</li>
+<li>
+<p><strong>Multi-Format Text Support</strong>: Inputs in HTML, Markdown, plain text, and emails must be processed effectively.</p>
+</li>
+</ol>
+<h2 id="non-functional-requirements"><a class="header" href="#non-functional-requirements">Non-Functional Requirements</a></h2>
+<ol>
+<li>
+<p><strong>Performance</strong>: The system must generate responses in under 1.5 seconds.</p>
+</li>
+<li>
+<p><strong>Scalability</strong>: It must support multiple simultaneous users without degradation.</p>
+</li>
+<li>
+<p><strong>Availability</strong>: The system must be operational 99% of the time.</p>
+</li>
+<li>
+<p><strong>Clarity</strong>: The generated audio must be clear and easy to understand.</p>
+</li>
+<li>
+<p><strong>Naturalness</strong>: Voices must sound natural and human-like, avoiding robotic tones.</p>
+</li>
+<li>
+<p><strong>Redundancy</strong>: Mechanisms should ensure uninterrupted service even in case of failures.</p>
+</li>
+<li>
+<p><strong>Maintainability</strong>: The system must have modular, well-documented code for easy updates.</p>
+</li>
+<li>
+<p><strong>Multilingual Capability</strong>: It should support multiple languages to cater to diverse markets.</p>
+</li>
+<li>
+<p><strong>Legal Compliance</strong>: All voices used must adhere to licensing and copyright laws.</p>
+</li>
+</ol>
+<h2 id="constraints"><a class="header" href="#constraints">Constraints</a></h2>
+<ol>
+<li>
+<p><strong>Integration with Virtual Assistants</strong>: The system must integrate seamlessly with existing virtual assistants, preserving user experience.</p>
+</li>
+<li>
+<p><strong>Independent Deployment</strong>: It must operate autonomously without third-party dependencies.</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="how-to-install"><a class="header" href="#how-to-install">How to install</a></h1>
+<p>This guide will walk you through the steps to install the application.</p>
+<h3 id="no_entry-at-least-25gb-of-free-space-is-required-to-install-the-application-no_entry"><a class="header" href="#no_entry-at-least-25gb-of-free-space-is-required-to-install-the-application-no_entry">:no_entry: <span style="color:RED">At least 25GB of free space is required to install the application.</span> :no_entry:</a></h3>
+<h2 id="components"><a class="header" href="#components">Components</a></h2>
+<ul>
+<li><a href="installation/./docker.html">Docker</a></li>
+<li><a href="installation/./standalone.html">Standalone</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="docker-1"><a class="header" href="#docker-1">Docker</a></h2>
+<p>For ease of use, we have provided a Dockerfile that contains all the necessary dependencies to run the application. This is the recommended way to run the application.</p>
+<h3 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h3>
+<ul>
+<li><a href="https://docs.docker.com/install/">Docker</a></li>
+<li><a href="https://docs.docker.com/compose/install/">Docker Compose</a></li>
+<li><a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git</a></li>
+</ul>
+<h3 id="installation"><a class="header" href="#installation">Installation</a></h3>
+<ol>
+<li>
+<p>Clone the repository:</p>
+<pre><code class="language-bash">git clone https://github.com/ddu72/PI
+</code></pre>
+</li>
+<li>
+<p>Change to the project directory:</p>
+<pre><code class="language-bash">cd PI
+</code></pre>
+</li>
+<li>
+<p>Build the Docker image:</p>
+<pre><code class="language-bash">docker-compose build
+</code></pre>
+</li>
+<li>
+<p>Start the target services:</p>
+<pre><code class="language-bash">docker-compose up [proxy, server, api, normalizer] -d
+</code></pre>
+<p><strong>!Note</strong>: The <code>-d</code> flag is optional and runs the services in detached mode.</p>
+<p><strong>!Note</strong>: The each service will start its dependencies automatically, for example, the <code>proxy</code> service will start all the <code>server</code> services and the <code>server</code> service will start the <code>normalizer</code> service.</p>
+</li>
+</ol>
+<p>The services are now running and ready to be used. See <a href="installation/../usage/docker.html">How to Use</a> for more information.</p>
+<h3 id="stopping-the-services"><a class="header" href="#stopping-the-services">Stopping the Services</a></h3>
+<p>To stop the services, run the following command:</p>
+<pre><code class="language-bash">docker-compose down
+</code></pre>
+<h3 id="removing-the-docker-image"><a class="header" href="#removing-the-docker-image">Removing the Docker Image</a></h3>
+<p>To remove the Docker image, run the following command:</p>
+<pre><code class="language-bash">docker-compose down --rmi all
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="standalone-program"><a class="header" href="#standalone-program">Standalone Program</a></h2>
+<p>The Intelex Module can be used as a standalone program (Single Service).</p>
+<h3 id="prerequisites-1"><a class="header" href="#prerequisites-1">Prerequisites</a></h3>
+<ul>
+<li><a href="https://www.python.org/downloads/">Python 3.12</a></li>
+<li><a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git</a></li>
+<li><a href="https://pip.pypa.io/en/stable/installation/">Pip</a></li>
+<li><a href="https://ffmpeg.org/download.html">FFmpeg</a></li>
+<li><a href="https://www.gnu.org/software/wget/">wget</a></li>
+</ul>
+<h3 id="installation-1"><a class="header" href="#installation-1">Installation</a></h3>
+<ol>
+<li>
+<p>Clone the repository:</p>
+<pre><code class="language-bash">git clone https://github.com/ddu72/PI
+</code></pre>
+</li>
+<li>
+<p>Change to the project directory:</p>
+<pre><code class="language-bash">cd PI
+</code></pre>
+</li>
+<li>
+<p>Download the pre-trained models:</p>
+<pre><code class="language-bash">sh download_models.sh
+</code></pre>
+<p><strong>!Note</strong>: This will download the pre-trained models to the <code>model</code> directory. This may take a while depending on your internet connection. (Aprox. 7GB)</p>
+</li>
+<li>
+<p>Install the requirements:</p>
+<pre><code class="language-bash">pip install -r environments/server_requirements.txt
+</code></pre>
+</li>
+</ol>
+<p>The standalone program is now ready to be used. See <a href="installation/../usage/standalone.html">How to Use</a> for more information.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="how-to-use"><a class="header" href="#how-to-use">How to use</a></h1>
+<p>This section will guide you through the process of using the system, either as a standalone program or as a dockerized version.</p>
+<h2 id="components-1"><a class="header" href="#components-1">Components</a></h2>
+<ul>
+<li><a href="usage/./docker.html">Docker</a></li>
+<li><a href="usage/./standalone.html">Standalone</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="docker-2"><a class="header" href="#docker-2">Docker</a></h2>
+<p>To run the application (Client-side) using Docker, follow the steps below.</p>
+<h3 id="prerequisites-2"><a class="header" href="#prerequisites-2">Prerequisites</a></h3>
+<ul>
+<li><a href="https://docs.docker.com/install/">Docker</a></li>
+<li><a href="https://docs.docker.com/compose/install/">Docker Compose</a></li>
+<li>Docker images built (see <a href="usage/../installation/docker.html">How to Install</a>)</li>
+</ul>
+<h3 id="usage"><a class="header" href="#usage">Usage</a></h3>
+<ol>
+<li>
+<p>Verify that the Docker images have been built and the &quot;main&quot; services are running:</p>
+<pre><code class="language-bash">docker compose ps
+</code></pre>
+<p><strong>!Note</strong>: The output should be similar to the following:</p>
+<pre><code class="language-bash">PI&gt; docker compose ps
+NAME                   IMAGE                      COMMAND                  SERVICE      CREATED          STATUS          PORTS
+normalizer_container   tts-agentifai:normalizer   &quot;python app_normaliz…&quot;   normalizer   13 seconds ago   Up 12 seconds   50051/tcp
+proxy_container        tts-agentifai:proxy        &quot;python app_proxy -d&quot;    proxy        13 seconds ago   Up 11 seconds   0.0.0.0:50051-&gt;50051/tcp, :::50051-&gt;50051/tcp
+server_container1      tts-agentifai:server       &quot;python app_server&quot;      server_1     13 seconds ago   Up 12 seconds   50051/tcp
+server_container2      tts-agentifai:server       &quot;python app_server&quot;      server_2     13 seconds ago   Up 12 seconds   50051/tcp
+server_container3      tts-agentifai:server       &quot;python app_server&quot;      server_3     13 seconds ago   Up 12 seconds   50051/tcp
+</code></pre>
+<p><strong>!Note</strong>: The <code>normalizer_container</code>, <code>proxy_container</code>, and <code>server_containerX</code> services should be running.</p>
+</li>
+<li>
+<p>Run endpoints:</p>
+<ol>
+<li>
+<p>Client:</p>
+<pre><code class="language-bash">docker compose run -e PROXY_SERVER_PORT={PROXY_SERVER_PORT} -e PROXY_SERVER_ADDRESS={PROXY_SERVER_ADDRESS} client
+</code></pre>
+<p><strong>!Note</strong>: The <code>PROXY_SERVER_PORT</code> and <code>PROXY_SERVER_ADDRESS</code> are optional and default to <code>50051</code> and <code>proxy_container</code>, respectively.</p>
+<p><strong>!Note</strong>: The client will be available in the opened terminal.</p>
+</li>
+<li>
+<p>Frontend and API:</p>
+<pre><code class="language-bash">docker compose run frontend
+</code></pre>
+<p><strong>!Note</strong>: The frontend will be available at <code>http://localhost:3000</code> and the API will be available at <code>http://localhost:5000</code>.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>The output will be displayed in the terminal.</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="standalone-usage"><a class="header" href="#standalone-usage">Standalone Usage</a></h2>
+<p>This allows the user to synthesize text using the Intelex Module. This version is a standalone (Single Service) version of the implementation.</p>
+<h3 id="prerequisites-3"><a class="header" href="#prerequisites-3">Prerequisites</a></h3>
+<ul>
+<li>(see <a href="usage/../installation/standalone.html#prerequisites">Standalone Installation Pre-requisites</a>)</li>
+</ul>
+<h3 id="steps"><a class="header" href="#steps">Steps</a></h3>
+<ol>
+<li>
+<p>Run the program:</p>
+<pre><code class="language-bash">python intlex.py [TEXT] [CONFIG] --output [OUTPUT] --lang [LANG] --kwargs [KWARGS]
+</code></pre>
+</li>
+<li>
+<p>The output will be saved in the output file if provided, otherwise it will be stored in the default location.</p>
+</li>
+</ol>
+<h3 id="arguments-and-options"><a class="header" href="#arguments-and-options">Arguments and Options</a></h3>
+<p>For a more detailed explanation of the arguments and options for the standalone version, see the <a href="usage/../components/app_standalone.html#arguments-and-options">Intlex Model</a> section.</p>
+<h4 id="text-required"><a class="header" href="#text-required">TEXT <em>(Required)</em></a></h4>
+<p>This argument is used to pass the text to be synthesized.</p>
+<h4 id="config-optional"><a class="header" href="#config-optional">CONFIG <em>(Optional)</em></a></h4>
+<p>This argument is used to pass the configuration file. The default configuration file is in the <code>config</code> directory.</p>
+<h4 id="output-optional"><a class="header" href="#output-optional">OUTPUT <em>(Optional)</em></a></h4>
+<p>This argument is used to pass the output file. The default output file is <code>output.wav</code>.</p>
+<h4 id="lang-optional"><a class="header" href="#lang-optional">LANG <em>(Optional)</em></a></h4>
+<p>This argument is used to pass the language of the text to be synthesized. The default language is <code>pt</code>.</p>
+<h4 id="kwargs-optional"><a class="header" href="#kwargs-optional">KWARGS <em>(Optional)</em></a></h4>
+<p>This argument is used to pass additional arguments to the synthesizer. The arguments should be passed as a dictionary in the following format:</p>
+<pre><code class="language-bash">--kwargs '{&quot;temperature&quot;:0.01,&quot;top_p&quot;:0.4,&quot;top_k&quot;:60}'
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="updating"><a class="header" href="#updating">Updating</a></h1>
+<h2 id="model-training"><a class="header" href="#model-training">Model training</a></h2>
+<p>The <code>xtts_v2_pt_colab_pro_notebook.ipynb</code> notebook is a comprehensive script designed for fine-tuning and training the XTTS (Extended Text-to-Speech) model. It is structured for execution in Google Colab or locally, leveraging a dataset in the LJSpeech format and integrating with the Coqui TTS framework for model training and management.</p>
+<h2 id="dataset-format"><a class="header" href="#dataset-format">Dataset Format</a></h2>
+<p>The XTTS training process requires the dataset to be structured following the <strong>LJSpeech format</strong>, adapted for single-speaker audio data. Below is a detailed explanation of the format and its requirements.</p>
+<h3 id="directory-structure"><a class="header" href="#directory-structure">Directory Structure</a></h3>
+<p>The dataset should follow this structure:</p>
+<pre><code>dataset
+├── metadata.csv
+└── wavs
+    ├── audio_0.wav
+    ├── audio_1.wav
+    ├── audio_2.wav
+    ├── audio_3.wav
+    ├── audio_4.wav
+    ├── audio_5.wav
+    ├── audio_6.wav
+    ├── audio_7.wav
+    ├── audio_8.wav
+    ├── audio_9.wav
+    └── audio_N.wav
+</code></pre>
+<h3 id="components-2"><a class="header" href="#components-2">Components</a></h3>
+<ol>
+<li>
+<p><strong><code>metadata.csv</code></strong></p>
+<ul>
+<li>A CSV file that maps each audio file to its corresponding text transcription.</li>
+<li>Format: Each row contains:
+<ul>
+<li><code>filename</code> (without extension): The name of the audio file.</li>
+<li><code>transcription</code>: The text spoken in the audio file.</li>
+<li><code>normalizer transcription</code>: The text spoken in the audio file.</li>
+<li>Example:
+<pre><code class="language-csv">audio_0|Hello, welcome to the XTTS training system.|Hello, welcome to the XTTS training system.
+audio_1|This is an example of a training sentence with numbers 12345.| This is an example of a training sentence with numbers one two three four five.
+audio_n|High-quality audio is essential for better results.|High-quality audio is essential for better results.
+</code></pre>
+</li>
+</ul>
+</li>
+<li>The delimiter is a pipe (<code>|</code>).</li>
+</ul>
+</li>
+<li>
+<p><strong><code>wavs/</code> Directory</strong></p>
+<ul>
+<li>Contains all audio files in <strong>WAV format</strong>.</li>
+<li>Requirements:
+<ul>
+<li>Sampling rate: <strong>22,050 Hz</strong> (recommended).</li>
+<li>Single-channel (mono) audio.</li>
+<li>Bit depth: <strong>16-bit</strong> PCM encoding.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="requirements-for-training"><a class="header" href="#requirements-for-training"><span style="color:RED">Requirements for Training </span></a></h3>
+<ul>
+<li>The dataset must consist of:
+<ul>
+<li><span style="color:RED"><strong>Single Speaker</strong></span>: All audio recordings must originate from the same speaker to ensure consistency in the model's output.</li>
+<li><strong>Clear Transcriptions</strong>: Text transcriptions should accurately match the spoken content in the audio files. Any incorrectly text matched will &quot;Poison&quot; the model.</li>
+</ul>
+</li>
+<li>Audio file naming should correspond to the <code>filename</code> column in the <code>metadata.csv</code> file.</li>
+</ul>
+<h3 id="example-dataset-entry"><a class="header" href="#example-dataset-entry">Example Dataset Entry</a></h3>
+<p>For the dataset structure shown above, the <code>metadata.csv</code> might look like this:</p>
+<pre><code class="language-csv">audio_0|Hello, welcome to the XTTS training system.|Hello, welcome to the XTTS training system.
+audio_1|This is an example of a training sentence with numbers 12345.| This is an example of a training sentence with numbers one two three four five.
+audio_n|High-quality audio is essential for better results.|High-quality audio is essential for better results.
+</code></pre>
+<h3 id="notes"><a class="header" href="#notes">Notes</a></h3>
+<ul>
+<li>Ensure all filenames and paths are consistent between <code>metadata.csv</code> and the audio files.</li>
+<li>Verify the audio quality and transcriptions for best results during training.</li>
+<li>If using a dataset in another format, preprocess it into this structure before starting training.</li>
+</ul>
+<h2 id="file-structure-and-execution-flow"><a class="header" href="#file-structure-and-execution-flow">File Structure and Execution Flow</a></h2>
+<h3 id="1-environment-setup"><a class="header" href="#1-environment-setup">1. <strong>Environment Setup</strong></a></h3>
+<ul>
+<li><strong>Dependency Installation</strong>:
+<ul>
+<li>Installs necessary tools:
+<ul>
+<li><code>espeak-ng</code>: For phoneme generation in Portuguese.</li>
+<li><code>ffmpeg</code>: For audio processing.</li>
+</ul>
+</li>
+<li>Clones and installs the Coqui TTS repository to provide training utilities.</li>
+<li>Ensures all dependencies are installed with pip.</li>
+</ul>
+</li>
+<li><strong>Environment Variables</strong>:
+<ul>
+<li>Defines key dataset and model paths:
+<pre><code class="language-python">DATASET_URL = &quot;http://mayorx.xyz/Media/agentifai/podcast_dataset.zip&quot;
+DATASET_PATH = &quot;podcast_dataset.zip&quot;
+DATASET_DIR = &quot;dataset/&quot;
+DATASET_NAME = &quot;bitalk_podcast&quot;
+DATASET_LANG = &quot;pt&quot;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-dataset-management"><a class="header" href="#2-dataset-management">2. <strong>Dataset Management</strong></a></h3>
+<ul>
+<li><strong>Dataset Download and Preparation</strong>:
+<ul>
+<li>Fetches the dataset from a predefined URL and extracts it into a structured directory.</li>
+<li>Supports single-speaker datasets formatted similarly to LJSpeech:
+<ul>
+<li>WAV audio files.</li>
+<li>Corresponding metadata with text transcripts.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Input Voice Configuration</strong>:
+<ul>
+<li>Allows downloading or setting input voices for use during fine-tuning.</li>
+</ul>
+</li>
+<li>Commands used:
+<pre><code class="language-bash">wget $DATASET_URL -O $DATASET_PATH
+unzip $DATASET_PATH
+rm $DATASET_PATH
+</code></pre>
+</li>
+</ul>
+<h3 id="3-model-configuration"><a class="header" href="#3-model-configuration">3. <strong>Model Configuration</strong></a></h3>
+<ul>
+<li>
+<p><strong>Trainer Setup</strong>:</p>
+<ul>
+<li>Imports and configures <code>Trainer</code> and <code>TrainerArgs</code> from Coqui TTS to manage the training process.</li>
+<li>Defines <code>BaseDatasetConfig</code> to specify dataset properties.</li>
+</ul>
+</li>
+<li>
+<p><strong>Logging and Checkpoints</strong>:</p>
+<ul>
+<li>Logs training progress using TensorBoard.</li>
+<li>Saves model checkpoints to a defined directory.</li>
+</ul>
+</li>
+<li>
+<p>Sample Configuration:</p>
+<pre><code class="language-python">RUN_NAME = &quot;XTTS_FineTuned&quot;
+PROJECT_NAME = &quot;XTTS_trainer&quot;
+DASHBOARD_LOGGER = &quot;tensorboard&quot;
+CHECKPOINT_DIR = &quot;./checkpoints&quot;
+</code></pre>
+</li>
+</ul>
+<h3 id="4-training-execution"><a class="header" href="#4-training-execution">4. <strong>Training Execution</strong></a></h3>
+<ul>
+<li>Executes the training loop with Coqui TTS, fine-tuning the model based on the specified dataset.</li>
+<li>Allows flexibility in hyperparameters for optimization.</li>
+</ul>
+<h3 id="5-output"><a class="header" href="#5-output">5. <strong>Output</strong></a></h3>
+<ul>
+<li><strong>Model Artifacts</strong>:
+<ul>
+<li>Fine-tuned XTTS model saved in the checkpoint directory.</li>
+</ul>
+</li>
+<li><strong>Logs</strong>:
+<ul>
+<li>Training metrics and progress logged for monitoring via TensorBoard.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="prerequisites-4"><a class="header" href="#prerequisites-4">Prerequisites</a></h2>
+<h3 id="hardware"><a class="header" href="#hardware">Hardware</a></h3>
+<ul>
+<li><strong>GPU Required</strong>: A CUDA-enabled GPU is strongly recommended for efficient training.</li>
+</ul>
+<h3 id="software"><a class="header" href="#software">Software</a></h3>
+<ul>
+<li>Python 3.x.</li>
+<li>Necessary Python packages installed:
+<ul>
+<li><code>espeak-ng</code></li>
+<li><code>ffmpeg</code></li>
+<li><code>torch</code>, <code>numpy</code>, and other dependencies via Coqui TTS.</li>
+</ul>
+</li>
+</ul>
+<h3 id="dataset"><a class="header" href="#dataset">Dataset</a></h3>
+<ul>
+<li>A dataset formatted similarly to LJSpeech:
+<ul>
+<li>Audio files in WAV format.</li>
+<li>A metadata file containing transcripts for each audio file.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="usage-instructions"><a class="header" href="#usage-instructions">Usage Instructions</a></h2>
+<ol>
+<li>
+<p><strong>Setup Environment</strong>:</p>
+<ul>
+<li>Install the required dependencies by running the notebook's initial cells.</li>
+</ul>
+</li>
+<li>
+<p><strong>Download Dataset</strong>:</p>
+<ul>
+<li>Provide a dataset URL or manually place your dataset in the <code>dataset/</code> directory.</li>
+</ul>
+</li>
+<li>
+<p><strong>Configure Training</strong>:</p>
+<ul>
+<li>Adjust the training parameters in the notebook as needed:
+<ul>
+<li>Dataset path.</li>
+<li>Checkpoint directory.</li>
+<li>Logging options.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Run Training</strong>:</p>
+<ul>
+<li>Execute the training cells sequentially.</li>
+</ul>
+</li>
+<li>
+<p><strong>Monitor Progress</strong>:</p>
+<ul>
+<li>Use TensorBoard to visualize training metrics.</li>
+</ul>
+</li>
+<li>
+<p><strong>Save and Deploy</strong>:</p>
+<ul>
+<li>Use the final model checkpoint for deployment or further evaluation.</li>
+</ul>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="system-components"><a class="header" href="#system-components">System Components</a></h1>
+<p>In this section, we will discuss the system components, how they function, and how they interact with each other.</p>
+<h2 id="components-3"><a class="header" href="#components-3">Components</a></h2>
+<ul>
+<li><a href="components/./app_standalone.html">Intlex Module</a> </li>
+<li><a href="components/./app.html">Frontend</a></li>
+<li><a href="components/./app_api.html">API</a></li>
+<li><a href="components/./app_client.html">Client</a></li>
+<li><a href="components/./app_proxy.html">Proxy</a></li>
+<li><a href="components/./app_server.html">Server</a></li>
+<li><a href="components/./app_normalizer.html">Normalizer</a></li>
+</ul>
+<h2 id="communication-1"><a class="header" href="#communication-1">Communication</a></h2>
+<p>The components communicate with each other in the following ways:</p>
+<ul>
+<li>With the use of GRPC's:
+<ul>
+<li><code>API</code> &lt;---&gt; <code>Proxy</code></li>
+<li><code>Client</code> &lt;---&gt; <code>Proxy</code></li>
+<li><code>Proxy</code> &lt;---&gt; <code>Server</code></li>
+<li><code>Server</code> &lt;---&gt; <code>Normalizer</code></li>
+</ul>
+</li>
+<li>With the use of HTTP Requests and Responses:
+<ul>
+<li><code>Frontend</code> &lt;---&gt; <code>API</code></li>
+</ul>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="intlex-standalone-module"><a class="header" href="#intlex-standalone-module">Intlex Standalone Module</a></h2>
+<p>The Intlex Module serves as the standalone implementation of the text-to-speech system, allowing users to directly process text and generate audio files without using the microservices architecture. It provides flexibility for single-instance use cases.</p>
+<h3 id="usage-1"><a class="header" href="#usage-1">Usage</a></h3>
+<p>To use the Intlex Module, you can run the following command:</p>
+<pre><code class="language-bash">python intlex.py [TEXT] [CONFIG] --output [OUTPUT] --lang [LANG] --kwargs [KWARGS]
+</code></pre>
+<p>The output will be saved in the output file if provided, otherwise it will be stored in the default output file.</p>
+<h4 id="arguments-and-options-1"><a class="header" href="#arguments-and-options-1">Arguments and Options</a></h4>
+<ul>
+<li><code>TEXT</code>: Text to be synthesized (required) </li>
+<li><code>CONFIG</code>: Configuration file (optional)</li>
+<li><code>OUTPUT</code>: Output file (optional)</li>
+<li><code>LANG</code>: Language [pt, en] (optional)</li>
+<li><code>KWARGS</code>: Additional arguments (optional)</li>
+</ul>
+<h4 id="options"><a class="header" href="#options">Options:</a></h4>
+<h5 id="configuration-file"><a class="header" href="#configuration-file">Configuration File</a></h5>
+<p>The configuration file contains the settings for the synthesis process, such as the voice to clone, model information and configuration. If not provided, the default configuration will be used.</p>
+<pre><code class="language-json">{
+  &quot;normalization_config&quot;: &quot;config/normalization_rules.toml&quot;,
+  &quot;audio_path&quot;: {
+    &quot;pt&quot;: &quot;inputs/voices/marcelo.wav&quot;,
+    &quot;en&quot;: &quot;inputs/voices/eng_morgan_freeman.wav&quot;
+  },
+  &quot;storage_directory&quot;: &quot;inputs/voices&quot;,
+  &quot;xtts_config&quot;: &quot;model/training/GPT_XTTS_Finetuned/config.json&quot;,
+  &quot;model&quot;: {
+    &quot;checkpoint_dir&quot;: null,
+    &quot;eval&quot;: true,
+    &quot;strict&quot;: true,
+    &quot;speaker_file_path&quot;: null,
+    &quot;checkpoint_path&quot;: &quot;model/training/GPT_XTTS_Finetuned/best_model.pth&quot;,
+    &quot;vocab_path&quot;: &quot;model/training/XTTS_v2.0_original_model_files/vocab.json&quot;,
+    &quot;use_deepspeed&quot;: false
+  }
+}
+</code></pre>
+<p>Each field in the configuration file is described below:</p>
+<ul>
+<li>
+<p><code>normalization_config</code>: Path to the normalization configuration file to be used by the model</p>
+</li>
+<li>
+<p><code>audio_path</code>: Default input voices for conversion, the field is a dictionary with the keys being the voices' languages and the values being the paths to the audio files</p>
+<ul>
+<li><code>pt</code>: Path to the Portuguese reference audio file</li>
+<li><code>en</code>: Path to the English reference audio file</li>
+</ul>
+</li>
+<li>
+<p><code>storage_directory</code>: Path to the folder where the reference audio files are stored</p>
+</li>
+<li>
+<p><code>xtts_config</code>: Path to the XTTS configuration file to be used by the trained model</p>
+</li>
+<li>
+<p><code>model</code>: Model configuration to be used for conversion, the fields are according to the trained model to facilitate configuration</p>
+<ul>
+<li><code>checkpoint_dir</code>: Path to the directory where the model checkpoints are stored</li>
+<li><code>eval</code>: Whether the model is in evaluation mode</li>
+<li><code>strict</code>: Whether to strictly enforce the model configuration</li>
+<li><code>speaker_file_path</code>: Path to the file containing the speaker information</li>
+<li><code>checkpoint_path</code>: Path to the model checkpoint file</li>
+<li><code>vocab_path</code>: Path to the vocabulary file</li>
+<li><code>use_deepspeed</code>: Whether to use DeepSpeed for training</li>
+</ul>
+</li>
+</ul>
+<h5 id="language"><a class="header" href="#language">Language</a></h5>
+<p>The language option allows the user to specify the language of the text to be synthesized. The available languages are:</p>
+<ul>
+<li><code>pt</code>: Portuguese</li>
+<li><code>en</code>: English</li>
+</ul>
+<p>The model suports more languages, but the available voices are only in Portuguese and English. If the user wants to use another language, they must provide the voice file and update the configuration file accordingly.</p>
+<h5 id="additional-arguments-for-the-voice-synthesis"><a class="header" href="#additional-arguments-for-the-voice-synthesis">Additional Arguments for the voice synthesis</a></h5>
+<p>The <code>kwargs</code> option allows the user to specify additional arguments for the voice synthesis process. The available arguments are:</p>
+<ul>
+<li><code>length_penalty</code>: Length penalty for the synthesis process</li>
+<li><code>repetition_penalty</code>: Repetition penalty for the synthesis process</li>
+<li><code>top_k</code>: Top k tokens to consider for the synthesis process</li>
+<li><code>top_p</code>: Top p tokens to consider for the synthesis process</li>
+<li><code>do_sample</code>: Whether to sample the tokens</li>
+<li><code>temperature</code>: Temperature for the sampling process</li>
+</ul>
+<p>The default values for the additional arguments are:</p>
+<pre><code class="language-json">{
+  &quot;length_penalty&quot;: 1.0,
+  &quot;repetition_penalty&quot;: 2.5,
+  &quot;top_k&quot;: 40,
+  &quot;top_p&quot;: 0.5,
+  &quot;do_sample&quot;: true,
+  &quot;temperature&quot;: 0.7
+}
+</code></pre>
+<p>The format for the <code>kwargs</code> option is a dictionary with the keys being the argument names and the values being the argument values.</p>
+<pre><code class="language-bash">py intlex.py TEXT --kwargs '{&quot;temperature&quot;:0.01,&quot;top_p&quot;:0.4,&quot;top_k&quot;:60}'
+</code></pre>
+<p>This will set the temperature to 0.01, top_p to 0.4 and top_k to 60.</p>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
+<p>To synthesize the text &quot;Hello, World!&quot; in English, you can run the following command:</p>
+<pre><code class="language-bash">python intlex.py &quot;Hello, World!&quot; --lang en
+</code></pre>
+<p>This will generate an audio file with the synthesized speech in English.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="frontend"><a class="header" href="#frontend">Frontend</a></h2>
+<p>The frontend is the user interface of the application. It is responsible for rendering the user interface and handling user interactions. The frontend is built using React.</p>
+<h3 id="requirements-1"><a class="header" href="#requirements-1">Requirements</a></h3>
+<p>The frontend requires the following:</p>
+<ul>
+<li>
+<p>ENV: The environment variables must be defined in the <code>.env</code> file or as environment variables. The following variables must be defined:</p>
+<ul>
+<li><code>PORT</code>: The port on which the frontend will run.</li>
+<li><code>REACT_APP_API_IP_PORT</code>: The port of the API server.</li>
+<li><code>REACT_APP_API_IP_ADDRESS</code>: The address of the API server.</li>
+</ul>
+</li>
+<li>
+<p>Dependencies: The frontend requires the following dependencies:</p>
+<ul>
+<li><a href="https://nodejs.org/en/">Node.js</a></li>
+<li><a href="https://www.npmjs.com/get-npm">npm</a></li>
+<li><a href="https://www.npmjs.com/package/axios">axios</a></li>
+<li><a href="https://www.npmjs.com/package/react-audio-player">react-audio-player</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="usage-2"><a class="header" href="#usage-2">Usage</a></h3>
+<p>To run the frontend, you can do the following:</p>
+<ol>
+<li>Define the api address and port in the <code>.env</code> file or as an environment variable. The serve port can also be defined. For example:
+<pre><code class="language-bash">export PORT=3000
+export REACT_APP_API_IP_PORT=5000
+export REACT_APP_API_IP_ADDRESS={api_address}
+</code></pre>
+</li>
+<li>Install the required dependencies by running:
+<pre><code class="language-bash">cd app
+npm install
+</code></pre>
+</li>
+<li>Start the frontend by running:
+<pre><code class="language-bash">cd app
+npm start
+</code></pre>
+</li>
+</ol>
+<p>The frontend will be available at <code>http://localhost:3000</code>.</p>
+<h3 id="comunication"><a class="header" href="#comunication">Comunication</a></h3>
+<p>The frontend communicates with the API to send the text to be synthesized and receive the audio file. The API is responsible for processing the text and generating the audio file.</p>
+<p>The frontend sends a POST request to the API with the text to be synthesized. The API processes the request and when completed, the audio file is sent to the frontend. The frontend then receives the audio file and displays it to the user.</p>
+<h5 id="request"><a class="header" href="#request">Request</a></h5>
+<pre><code class="language-json">{
+    &quot;text&quot;:&quot;O exame de Época Especial realiza-se no dia 10 de Julho, às 9:00, na sala Ed.2 1.03.&quot;,
+    &quot;language&quot;:&quot;pt&quot;
+}
+</code></pre>
+<h5 id="response"><a class="header" href="#response">Response</a></h5>
+<pre><code class="language-json">[BINARY DATA]
+</code></pre>
+<h3 id="aspect"><a class="header" href="#aspect">Aspect</a></h3>
+<p>The frontend is composed of only one page, which contains the text input and the audio player. The user can input the text to be synthesized and click the &quot;Enviar&quot; button to generate the audio file. The audio player will display the audio file and allow the user to play, pause, and stop the audio.</p>
+<p><img src="components/../images/frontend/frontend.png" alt="Frontend" /></p>
+<p><img src="components/../images/frontend/frontend_text.png" alt="Frontend With Text" /></p>
+<p><img src="components/../images/frontend/frontend_sent.png" alt="Frontend Waiting" /></p>
+<p><img src="components/../images/frontend/frontend_audio.png" alt="Frontend With Audio Player" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="api"><a class="header" href="#api">API</a></h2>
+<p>The API is a RESTful service that provides access to the system's functionality. It is built using <a href="https://flask.palletsprojects.com/en/stable/installation/#python-version">Flask</a>, a Python microframework for web development. The API is responsible for handling requests from the client, processing them by sending them to the proxy, and returning the appropriate response.</p>
+<h3 id="endpoints"><a class="header" href="#endpoints">Endpoints</a></h3>
+<p>The API has the following endpoint:</p>
+<ul>
+<li><code>/api/tts</code>: This endpoint is used to syntesize text to speech. It accepts a POST request with a JSON payload containing the text to be synthesized and the language to use. The API sends the text to the proxy, which then sends it to the TTS engine. The TTS engine synthesizes the text and returns the audio file, which is then returned to the client.</li>
+</ul>
+<h4 id="post-apitts"><a class="header" href="#post-apitts">POST <code>/api/tts</code></a></h4>
+<h5 id="request-1"><a class="header" href="#request-1">Request</a></h5>
+<pre><code class="language-json">{
+    &quot;text&quot;: &quot;Hello, how are you?&quot;,
+    &quot;language&quot;: &quot;en&quot;
+}
+</code></pre>
+<h5 id="response-1"><a class="header" href="#response-1">Response</a></h5>
+<pre><code class="language-json">UklGRvYAAABXQVZFZm10...IBAAAAABAAEAQB8AAEAfAAAA==
+</code></pre>
+<h3 id="requirements-2"><a class="header" href="#requirements-2">Requirements</a></h3>
+<p>The API requires the following:</p>
+<ul>
+<li>
+<p>ENV: The environment variables must be defined in the <code>.env</code> file or as environment variables. The following variables must be defined:</p>
+<ul>
+<li><code>PORT</code>: The port on which the API server will run.</li>
+<li><code>PROXY_SERVER_PORT</code>: The port on which the proxy server is running.</li>
+<li><code>PROXY_SERVER_ADDRESS</code>: The address of the proxy server.</li>
+</ul>
+</li>
+<li>
+<p>Dependencies: The API requires the following dependencies:</p>
+<ul>
+<li><a href="components/../../../enviroments/api_requirements.txt">Python requirements</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="usage-3"><a class="header" href="#usage-3">Usage</a></h3>
+<p>To use the API, you need to start the Flask server by doing the following:</p>
+<ol>
+<li>
+<p>Define the proxy address and port in the <code>.env</code> file or as an environment variable. The serve port can also be defined, just remember to update the frontend <code>REACT_APP_API_PORT</code> to the correct one. For example:</p>
+<pre><code class="language-bash">export PORT=5000
+export PROXY_SERVER_PORT=50051
+export PROXY_SERVER_ADDRESS={proxy_address}
+</code></pre>
+</li>
+<li>
+<p>Install the required dependencies by running:</p>
+<pre><code class="language-bash">pip install -r enviroments/api_requirements.txt
+</code></pre>
+</li>
+<li>
+<p>Start the Flask server by running:</p>
+<pre><code class="language-bash">python app_api
+</code></pre>
+</li>
+</ol>
+<p>The API will start running on the specified port, and you can now send requests to it.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="client"><a class="header" href="#client">Client</a></h2>
+<p>The client is the user interface of the application. It is a terminal-based application that allows users to interact with the system. The client is responsible for sending requests directly to the Proxy and displaying the responses to the user.</p>
+<h3 id="functionality"><a class="header" href="#functionality">Functionality</a></h3>
+<p>The client provides the following functionality:</p>
+<ul>
+<li>
+<p><strong>User authentication</strong>: The client allows users to log in to the system using their <code>token</code>.</p>
+</li>
+<li>
+<p><strong>User interaction</strong>: The client provides a command-line interface for users to interact with the system. Users can send requests to the Proxy and receive responses.</p>
+</li>
+<li>
+<p><strong>Response display</strong>: The client displays the responses received from the Proxy in a user-friendly format.</p>
+</li>
+</ul>
+<h3 id="implementation"><a class="header" href="#implementation">Implementation</a></h3>
+<p>The client is a rudimentary terminal-based application made in Python. It reads user input from the command line, sends requests to the Proxy, and displays the responses to the user. The client uses the <code>grpc</code> library to communicate with the Proxy using gRPC.</p>
+<p>The client is a standalone component that can be run on any machine with Python installed. It requires only the <code>grpcs</code> module/folder to be present in the same directory.</p>
+<h3 id="requirements-3"><a class="header" href="#requirements-3">Requirements</a></h3>
+<p>The client requires the following dependencies:</p>
+<ul>
+<li>Python 3.12 or higher</li>
+<li><a href="components/../../../enviroments/client_requirements.txt">Python packages</a></li>
+</ul>
+<h3 id="usage-4"><a class="header" href="#usage-4">Usage</a></h3>
+<p>To run the client, follow these steps:</p>
+<ol>
+<li>Clone the repository:
+<pre><code class="language-bash">git clone https://github.com/ddu72/PI
+</code></pre>
+</li>
+<li>Define the environment variables:
+<pre><code class="language-bash">export USER_TOKEN={user_token}
+export PROXY_SERVER_PORT={proxy_host}
+export PROXY_SERVER_ADDRESS={proxy_port}
+</code></pre>
+</li>
+<li>Install the required packages:
+<pre><code class="language-bash">pip install -r environments/client_requirements.txt
+</code></pre>
+</li>
+<li>Run the client:
+<pre><code class="language-bash"> python app_client
+</code></pre>
+</li>
+<li>Follow the instructions displayed on the terminal to interact with the system.</li>
+</ol>
+<h3 id="aspect-1"><a class="header" href="#aspect-1">Aspect</a></h3>
+<p><img src="components/../images/client/client.png" alt="Client Aspect" /></p>
+<p><img src="components/../images/client/client_text.png" alt="Client with Text" /></p>
+<p><img src="components/../images/client/client_done.png" alt="Client Audio List" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="normalization"><a class="header" href="#normalization">Normalization</a></h2>
+<p>The Normalization Service is a microservice responsible for pre-processing text inputs to ensure a standardized and consistent format before they are sent to the TTS synthesis process. It uses a modular design, allowing flexibility in managing text transformations such as punctuation adjustments, number-to-word conversions, date formatting, and abbreviation expansions.</p>
+<p>This service supports multiple languages and can be configured via a <code>rules.toml</code> file, making it easy to adapt to new use cases or languages.</p>
+<h3 id="functionality-1"><a class="header" href="#functionality-1">Functionality</a></h3>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>
+<p><strong>Text Normalization</strong>:<br />
+Converts raw text into a predictable, synthesis-ready format. Handles various textual elements including punctuation, numbers, and abbreviations.</p>
+</li>
+<li>
+<p><strong>Multi-Language Support</strong>:<br />
+Adapts normalization rules based on the language (e.g., <code>pt</code> for Portuguese, <code>en</code> for English).</p>
+</li>
+<li>
+<p><strong>gRPC Communication</strong>:<br />
+Offers a <code>Normalize</code> method to process text requests from the TTS server and returns a <code>NormalizeResponse</code> with the transformed text.</p>
+</li>
+<li>
+<p><strong>Modularity</strong>:<br />
+Rules are implemented as independent modules, which can be enabled or disabled through the configuration file.</p>
+</li>
+</ul>
+<h3 id="architecture-1"><a class="header" href="#architecture-1">Architecture</a></h3>
+<p><strong>Core Logic</strong>:</p>
+<ul>
+<li>The <code>Normalizer</code> class is the entry point for applying normalization rules.</li>
+<li>Rules are dynamically loaded based on the configuration file.</li>
+</ul>
+<p><strong>Rule Modules</strong>:</p>
+<ul>
+<li>Each rule is a separate class inheriting from a <code>NormalizationRule</code> base class.</li>
+</ul>
+<p><strong>gRPC Service</strong>:</p>
+<ul>
+<li><strong>File</strong>: <code>normalizer.py</code></li>
+<li>Defines the <code>NormalizerService</code> and handles requests via gRPC.</li>
+</ul>
+<h3 id="implementation-1"><a class="header" href="#implementation-1">Implementation</a></h3>
+<p><strong>File</strong>: <code>normalizer.py</code></p>
+<p>The <code>NormalizerService</code> initializes the <code>Normalizer</code> class with a rule configuration and exposes the <code>Normalize</code> method:</p>
+<pre><code class="language-python">class NormalizerService(normalizer_pb2_grpc.NormalizerServiceServicer):
+    def __init__(self, args):
+        if args.rules is None:
+            args.rules = NORMALIZER_RULES
+        self.normalizer = Normalizer(args.rules)
+        
+    def Normalize(self, request, context):
+        normalized_text = self.normalizer.normalize_text(request.text.strip())
+        return normalizer_pb2.NormalizeResponse(normalized_text=normalized_text)
+</code></pre>
+<p>The service listens on a configurable port (<code>NORMALIZER_PORT</code>) and communicates with other components using gRPC.</p>
+<h3 id="rules"><a class="header" href="#rules">Rules</a></h3>
+<h4 id="punctuation-handling"><a class="header" href="#punctuation-handling">Punctuation Handling</a></h4>
+<ul>
+<li><strong>File</strong>: <code>punctuation_handling.py</code></li>
+<li><strong>Functionality</strong>: Removes or replaces specified punctuation marks and reduces multiple consecutive spaces to a single space.</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-json">Input: &quot;Olá, mundo!&quot;
+Output: &quot;Olá  mundo&quot;
+</code></pre>
+<p><strong>Configuration</strong> (<code>rules.toml</code>):</p>
+<pre><code class="language-toml">[rules.punctuation_handling]
+enabled = true
+remove = [&quot;!&quot;, &quot;?&quot;]
+replace_with_space = [&quot;,&quot;, &quot;;&quot;]
+</code></pre>
+<h4 id="number-conversion"><a class="header" href="#number-conversion">Number Conversion</a></h4>
+<ul>
+<li><strong>File</strong>: <code>number_conversion.py</code></li>
+<li><strong>Functionality</strong>: Converts numbers into words and handles percentages, ordinals, fractions, and ranges.</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-json">Input: &quot;25%&quot; (language: pt)
+Output: &quot;vinte e cinco por cento&quot;
+</code></pre>
+<p><strong>Configuration</strong> (<code>rules.toml</code>):</p>
+<pre><code class="language-toml">[rules.number_conversion]
+enabled = true
+detect_percentage = true
+detect_years = true
+detect_ordinal = true
+handle_fractions = true
+handle_ranges = true
+handle_currency = true
+supported_currency = [&quot;USD&quot;, &quot;EUR&quot;] # Example
+currency_map = &quot;path/to/currency_map.json&quot;
+type = &quot;long&quot; # Example
+</code></pre>
+<h4 id="date-conversion"><a class="header" href="#date-conversion">Date Conversion</a></h4>
+<ul>
+<li><strong>File</strong>: <code>date_conversion.py</code></li>
+<li><strong>Functionality</strong>: Converts date formats into words and supports partial dates (e.g., &quot;January 2020&quot;).</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-json">Input: &quot;2022-12-25&quot;
+Output: &quot;vinte e cinco de dezembro de dois mil e vinte e dois&quot;
+</code></pre>
+<p><strong>Configuration</strong> (<code>rules.toml</code>):</p>
+<pre><code class="language-toml">[rules.date_conversion]
+enabled = true
+allowed_separator = [&quot;-&quot;, &quot;/&quot;]
+formats = [&quot;yyyy-MM-dd&quot;, &quot;MM/dd/yyyy&quot;]
+</code></pre>
+<h4 id="custom-replacements"><a class="header" href="#custom-replacements">Custom Replacements</a></h4>
+<ul>
+<li><strong>File</strong>: <code>custom_replacements.py</code></li>
+<li><strong>Functionality</strong>: Replaces patterns defined in a <code>custom_replacements.json</code> file.</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-json">Input: &quot;IA é fascinante&quot;
+Output: &quot;Inteligência Artificial é fascinante&quot;
+</code></pre>
+<p><strong>Configuration</strong> (<code>rules.toml</code>):</p>
+<pre><code class="language-toml">[rules.custom_replacements]
+case_sensitive = false
+use_regex_flags = true
+</code></pre>
+<h4 id="abbreviations"><a class="header" href="#abbreviations">Abbreviations</a></h4>
+<ul>
+<li><strong>File</strong>: <code>abbreviations.py</code></li>
+<li><strong>Functionality</strong>: Expands abbreviations using a <code>abbreviations.json</code> mapping file.</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-json">Input: &quot;Dr. Silva&quot;
+Output: &quot;Doutor Silva&quot;
+</code></pre>
+<p><strong>Configuration</strong> (<code>rules.toml</code>):</p>
+<pre><code class="language-toml">[rules.abbreviations]
+enabled = true
+abbreviation_file = &quot;abbreviations.json&quot;
+</code></pre>
+<h3 id="configuration"><a class="header" href="#configuration">Configuration</a></h3>
+<p><strong>File</strong>: <code>rules.toml</code></p>
+<p>This file allows enabling/disabling specific rules and defining their parameters. For example:</p>
+<pre><code class="language-toml">[rule_order]
+rules = [&quot;punctuation_handling&quot;, &quot;number_conversion&quot;, &quot;date_conversion&quot;, &quot;abbreviations&quot;]
+
+[punctuation_handling]
+enabled = true
+remove = [&quot;!&quot;, &quot;?&quot;]
+replace_with_space = [&quot;,&quot;, &quot;;&quot;]
+
+[number_conversion]
+enabled = true
+handle_currency = true
+detect_percentage = true
+detect_ordinal = true
+
+[date_conversion]
+enabled = true
+formats = [&quot;yyyy-MM-dd&quot;, &quot;MM/dd/yyyy&quot;]
+
+[abbreviations]
+enabled = true
+abbreviation_file = &quot;abbreviations.json&quot;
+</code></pre>
+<h3 id="workflow"><a class="header" href="#workflow">Workflow</a></h3>
+<p><strong>Input</strong>:</p>
+<pre><code class="language-python">&quot;Dr. Silva deve $25,50 desde 01/01/2022.&quot;
+</code></pre>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li>
+<p><strong>Abbreviation Expansion</strong>:</p>
+<pre><code class="language-python">&quot;Doutor Silva deve $25,50 desde 01/01/2022.&quot;
+</code></pre>
+</li>
+<li>
+<p><strong>Number Conversion</strong>:</p>
+<pre><code class="language-python">&quot;Doutor Silva deve vinte e cinco dólares e cinquenta cêntimos desde 01/01/2022.&quot;
+</code></pre>
+</li>
+<li>
+<p><strong>Date Conversion</strong>:</p>
+<pre><code class="language-python">&quot;Doutor Silva deve vinte e cinco dólares e cinquenta cêntimos desde o primeiro de janeiro de dois mil e vinte e dois.&quot;
+</code></pre>
+</li>
+</ol>
+<p><strong>Output</strong>:</p>
+<pre><code class="language-python">&quot;Doutor Silva deve vinte e cinco dólares e cinquenta cêntimos desde o primeiro de janeiro de dois mil e vinte e dois.&quot;`
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="proxy"><a class="header" href="#proxy">Proxy</a></h2>
+<p>The Proxy is the intermediary between the clients and the Server. It receives requests from the clients, forwards them to the available server, and returns the responses to the respective client.</p>
+<p>The proxy also handles the load balancing and availability of the servers. It keeps track of the available servers and distributes the requests among them based on their load.</p>
+<h3 id="functionality-2"><a class="header" href="#functionality-2">Functionality</a></h3>
+<p>The Proxy provides the following functionality:</p>
+<ul>
+<li>
+<p><strong>Request forwarding</strong>: The Proxy receives requests from the clients and forwards them to the available servers.</p>
+</li>
+<li>
+<p><strong>Response routing</strong>: The Proxy receives responses from the servers and routes them back to the respective clients.</p>
+</li>
+<li>
+<p><strong>Server Availability</strong>: The Proxy keeps track of the available servers and distributes the requests among them based on their load.</p>
+</li>
+</ul>
+<h3 id="implementation-2"><a class="header" href="#implementation-2">Implementation</a></h3>
+<p>The Proxy is implemented as a gRPC server in Python. It listens for requests from the clients, forwards them to the available servers, and returns the responses to the clients.</p>
+<p>The Proxy uses the <code>grpc</code> library to communicate with the clients and servers using gRPC. It maintains a list of available servers and their load status to distribute the requests efficiently.</p>
+<p>The Proxy is a standalone component that can be run on any machine with Python installed. It requires only the <code>grpc</code> module/folder to be present in the same directory.</p>
+<h3 id="requirements-4"><a class="header" href="#requirements-4">Requirements</a></h3>
+<p>The Proxy requires the following dependencies:</p>
+<ul>
+<li>Python 3.12 or higher</li>
+<li><a href="components/../../../enviroments/proxy_requirements.txt">Python packages</a></li>
+</ul>
+<h3 id="usage-5"><a class="header" href="#usage-5">Usage</a></h3>
+<p>To run the Proxy, follow these steps:</p>
+<ol>
+<li>
+<p>Clone the repository:</p>
+<pre><code class="language-bash">git clone https://github.com/ddu72/PI
+</code></pre>
+</li>
+<li>
+<p>Define the environment variables:</p>
+<pre><code class="language-bash">export PROXY_SERVER_PORT={proxy_port}
+export PROXY_SERVER_CONFIG={proxy_config}
+</code></pre>
+</li>
+<li>
+<p>Install the required packages:</p>
+<pre><code class="language-bash"> pip install -r environments/proxy_requirements.txt
+</code></pre>
+</li>
+<li>
+<p>Run the Proxy:</p>
+<pre><code class="language-bash"> python app_proxy
+</code></pre>
+</li>
+<li>
+<p>The Proxy will start listening for requests from the clients and forwarding them to the available servers.</p>
+</li>
+</ol>
+<h3 id="arguments"><a class="header" href="#arguments">Arguments</a></h3>
+<p>The Proxy accepts the following arguments, some can only be passed as environment variables:</p>
+<ul>
+<li>
+<p><code>PROXY_SERVER_PORT</code>: The port on which the Proxy server will listen for requests. (Environment Variable)</p>
+</li>
+<li>
+<p><code>PROXY_SERVER_CONFIG</code>: The configuration file for the Proxy server. (Environment Variable)</p>
+</li>
+<li>
+<p><code>-d</code>, <code>--debug</code>: Enable debug mode for the Proxy server. (Optional)</p>
+</li>
+</ul>
+<h3 id="configuration-1"><a class="header" href="#configuration-1">Configuration</a></h3>
+<p>The Proxy server configuration file should be in the following format:</p>
+<pre><code class="language-json">{
+    &quot;heartbeatInterval&quot;: 10,
+    &quot;heartbeatTimeout&quot;: 5,
+    &quot;servers&quot;: [
+        {
+            &quot;priority&quot;: 0,
+            &quot;name&quot;: &quot;tts@container1&quot;,
+            &quot;address&quot;: &quot;server_container1&quot;,
+            &quot;port&quot;: 50051,
+            &quot;load&quot;: 0.5
+        },
+        {
+            &quot;priority&quot;: 1,
+            &quot;name&quot;: &quot;tts@container2&quot;,
+            &quot;address&quot;: &quot;server_container2&quot;,
+            &quot;port&quot;: 50051,
+            &quot;load&quot;: 0.3
+        },
+        {
+            &quot;priority&quot;: 2,
+            &quot;name&quot;: &quot;tts@container3&quot;,
+            &quot;address&quot;: &quot;server_container3&quot;,
+            &quot;port&quot;: 50051,
+            &quot;load&quot;: 0.2
+        }
+    ]
+}
+</code></pre>
+<h4 id="proxy-server-configuration"><a class="header" href="#proxy-server-configuration">Proxy Server Configuration</a></h4>
+<h5 id="heartbeat-interval"><a class="header" href="#heartbeat-interval">Heartbeat Interval</a></h5>
+<p>The <code>heartbeatInterval</code> is the time interval in seconds at which the Proxy server will send heartbeat messages to the servers to check their availability.</p>
+<h5 id="heartbeat-timeout"><a class="header" href="#heartbeat-timeout">Heartbeat Timeout</a></h5>
+<p>The <code>heartbeatTimeout</code> is the time in seconds after which the Proxy server will consider a server unavailable if it does not receive a heartbeat message.</p>
+<h5 id="servers"><a class="header" href="#servers">Servers</a></h5>
+<p>The <code>servers</code> array contains the list of available servers with the following attributes:</p>
+<ul>
+<li><code>priority</code>: The priority of the server. The Proxy will distribute the requests based on the server's priority.</li>
+<li><code>name</code>: The name of the server.</li>
+<li><code>address</code>: The IP address or hostname of the server.</li>
+<li><code>port</code>: The port on which the server is listening for requests.</li>
+<li><code>load</code>: The current load of the server. The Proxy will distribute the requests based on the server's load.</li>
+</ul>
+<h4 id="note"><a class="header" href="#note">Note</a></h4>
+<p>The load balancing is not implemented in the current version of the Proxy. The servers are selected based on their priority only.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="server"><a class="header" href="#server">Server</a></h2>
+<p>The Server is responsible for processing the requests from the Proxy and returning the responses. The Server is a GRPC server that listens for requests from the Proxy and processes them. The Server is also responsible for communicating with the Normalizer to process the requests.</p>
+<h3 id="implementation-3"><a class="header" href="#implementation-3">Implementation</a></h3>
+<p>The Server is implemented as a GRPC server in Python. It listens for requests from the Proxy, processes them, and returns the responses. The Server uses the <code>grpc</code> library to communicate with the Proxy using GRPC. It also communicates with the Normalizer to process the requests.</p>
+<p>The Server also uses a database to store user data and other information. It uses the <code>sqlite3</code> library to interact with the database and store the data.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="improvements"><a class="header" href="#improvements">Improvements</a></h1>
+<h2 id="general"><a class="header" href="#general">General</a></h2>
+<ul>
+<li><strong>Tests</strong>: Develop comprehensive unit and integration tests to ensure system reliability and robustness.</li>
+<li><strong>Documentation</strong>: Improve and expand the documentation to assist developers and users.</li>
+<li><strong>Language Support</strong>: Add support for more languages beyond Portuguese to expand usability.</li>
+</ul>
+<h2 id="client-1"><a class="header" href="#client-1">Client</a></h2>
+<ul>
+<li><strong>Voice Option</strong>: Implement a feature allowing users to choose different voices.</li>
+<li><strong>User Interface</strong>: Enhance the command-line interface for a better user experience.</li>
+</ul>
+<h2 id="proxy-1"><a class="header" href="#proxy-1">Proxy</a></h2>
+<ul>
+<li><strong>Logging</strong>: Add a logging feature to keep track of request routing and errors.</li>
+<li><strong>Debugging</strong>: Fix verbose print statements and streamline debugging outputs.</li>
+</ul>
+<h2 id="server-1"><a class="header" href="#server-1">Server</a></h2>
+<ul>
+<li><strong>Logging</strong>: Implement logging to monitor server-side operations and potential issues.</li>
+</ul>
+<h2 id="normalizer"><a class="header" href="#normalizer">Normalizer</a></h2>
+<ul>
+<li><strong>Logging</strong>: Include detailed logs for text preprocessing steps and error handling.</li>
+</ul>
+<h2 id="api--frontend"><a class="header" href="#api--frontend">API &amp; Frontend</a></h2>
+<ul>
+<li><strong>Docker Connectivity</strong>: Fix connection issues when running the API and Frontend in Docker.</li>
+<li><strong>Frontend UI</strong>: Improve the web interface for better user interaction and usability.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="closing-notes"><a class="header" href="#closing-notes">Closing Notes</a></h1>
+<h2 id="to-whom-it-may-concern"><a class="header" href="#to-whom-it-may-concern">To whom it may concern</a></h2>
+<p>This project is open-source and welcomes contributions from the community.
+This project was developed by a team of students from the University of Minho, as part of the curricular unit: 14602 - Informatics Project for the course <a href="https://www.uminho.pt/EN/education/educational-offer/Cursos-Conferentes-a-Grau/_layouts/15/UMinho.PortalUM.UI/Pages/CatalogoCursoDetail.aspx?itemId=5067&amp;catId=15">Master's in Informatics Engineering</a>.</p>
+<p>The project was developed under the supervision of <a href="https://www.di.uminho.pt/~jmf/">Professor João Miguel Fernandes</a> and <a href="https://www.di.uminho.pt/~vma/">Professor Victor Manuel Rodrigues Alves</a>, with a proposal from <a href="https://agentifai.com/">Agentifai</a> to create a high-quality, low-latency, and modular TTS system for their virtual assistant.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

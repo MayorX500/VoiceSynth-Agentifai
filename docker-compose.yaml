@@ -11,6 +11,7 @@ services:
     environment:
       - PROXY_SERVER_PORT=50051
       - PROXY_SERVER_ADDRESS=proxy_container
+      - USER_TOKEN=1
     stdin_open: true
     tty: true
 
@@ -38,8 +39,6 @@ services:
     container_name: api_container
     networks:
       - tts_network
-    depends_on:
-      - proxy
     environment:
       - PROXY_SERVER_ADDRESS=proxy_container
       - PROXY_SERVER_PORT=50051
@@ -64,7 +63,6 @@ services:
       - PROXY_SERVER_CONFIG=config/proxy_config.json
     ports:
       - "50051:50051"
-    command: ["python", "app_proxy", "-d"]
 
   normalizer:
     build:

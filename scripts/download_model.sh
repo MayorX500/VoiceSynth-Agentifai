@@ -21,16 +21,16 @@ download_file() {
 create_dirs() {
 	## Create directories if they don't exist
 	mkdir -p inputs/voices
-	mkdir -p model/run/training/XTTS_v2.0_original_model_files/
-	mkdir -p model/run/training/GPT_XTTS_Finetuned/
+	mkdir -p model/training/XTTS_v2.0_original_model_files/
+	mkdir -p model/training/GPT_XTTS_Finetuned/
 }
 
 download_files() {
 	## Download files required for the model
 	download_file "http://mayorx.xyz/Media/agentifai/input_voice.wav" "inputs/voices/input_voice.wav"
-	download_file "https://huggingface.co/coqui/XTTS-v2/resolve/main/vocab.json" "model/run/training/XTTS_v2.0_original_model_files/vocab.json"
-	download_file "http://mayorx.xyz/Media/agentifai/config.json" "model/run/training/GPT_XTTS_Finetuned/config.json"
-	download_file "http://mayorx.xyz/Media/agentifai/last_gen.pth" "model/run/training/GPT_XTTS_Finetuned/best_model.pth"
+	download_file "https://huggingface.co/coqui/XTTS-v2/resolve/main/vocab.json" "model/training/XTTS_v2.0_original_model_files/vocab.json"
+	download_file "http://mayorx.xyz/Media/agentifai/config.json" "model/training/GPT_XTTS_Finetuned/config.json"
+	download_file "http://mayorx.xyz/Media/agentifai/last_gen.pth" "model/training/GPT_XTTS_Finetuned/best_model.pth"
 }
 
 main() {

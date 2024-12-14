@@ -16,6 +16,11 @@ PROXY_SERVER_ADDRESS = os.getenv("PROXY_SERVER_ADDRESS")
 if not PROXY_SERVER_ADDRESS:
     PROXY_SERVER_ADDRESS = "localhost" # Default IP address if not specified in the environment variables
 
+## USER TOKEN
+USER_TOKEN = os.getenv("USER_TOKEN")
+if not USER_TOKEN:
+    USER_TOKEN = "1" # Default user token if not specified in the environment variables
+
 import time
 import grpc
 import wave
@@ -207,6 +212,8 @@ def main(args):
     user_token = args.user_token
     if args.proxy_add is None:
         args.proxy_add = PROXY_SERVER_ADDRESS
+    if args.user_token is None:
+        user_token = USER_TOKEN  # Default user token for testing
     running = True
     while running:
         if user_token == "0":
@@ -264,6 +271,7 @@ def main(args):
 if __name__ == "__main__":
     parser = ap.ArgumentParser()
     parser.add_argument("proxy_add", nargs='?', type=str, help="IP address of the server", default=PROXY_SERVER_ADDRESS)
+    parser.add_argument("user_token", nargs='?', type=str, help="User token", default=USER_TOKEN)
     parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode", default=False)
     args = parser.parse_args()
     main(args)
