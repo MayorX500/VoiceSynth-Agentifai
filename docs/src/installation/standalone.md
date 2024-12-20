@@ -11,27 +11,31 @@ The Intelex Module can be used as a standalone program (Single Service).
 - [wget](https://www.gnu.org/software/wget/)
 
 ### Installation
+
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/ddu72/PI
-    ```
+   ```bash
+   git clone https://github.com/ddu72/PI
+   ```
+
 2. Change to the project directory:
 
-    ```bash
-    cd PI
-    ```
+   ```bash
+   cd PI
+   ```
+
 3. Download the pre-trained models:
 
-    ```bash
-    sh download_models.sh
-    ```
-    **!Note**: This will download the pre-trained models to the `model` directory. This may take a while depending on your internet connection. (Aprox. 7GB)
+   ```bash
+   sh download_models.sh
+   ```
+
+   **!Note**: This will download the pre-trained models to the `model` directory. This may take a while depending on your internet connection. (Aprox. 7GB)
 
 4. Install the requirements:
 
-    ```bash
-    pip install -r environments/server_requirements.txt
-    ```
+   ```bash
+   pip install -r environments/server_requirements.txt
+   ```
 
 The standalone program is now ready to be used. See [How to Use](../usage/standalone.md) for more information.

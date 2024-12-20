@@ -28,4 +28,3 @@
 
 - **Docker Connectivity**: Fix connection issues when running the API and Frontend in Docker.
 - **Frontend UI**: Improve the web interface for better user interaction and usability.
-

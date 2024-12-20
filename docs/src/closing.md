@@ -1,4 +1,5 @@
 # Closing Notes
+
 ## To whom it may concern
 
 This project is open-source and welcomes contributions from the community.

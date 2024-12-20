@@ -21,6 +21,7 @@ The client is a standalone component that can be run on any machine with Python 
 ### Requirements
 
 The client requires the following dependencies:
+
 - Python 3.12 or higher
 - [Python packages](../../../enviroments/client_requirements.txt)
 
@@ -45,7 +46,7 @@ To run the client, follow these steps:
 4. Run the client:
    ```bash
     python app_client
-    ```
+   ```
 5. Follow the instructions displayed on the terminal to interact with the system.
 
 ### Aspect

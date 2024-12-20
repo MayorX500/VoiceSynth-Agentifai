@@ -34,11 +34,13 @@ The Proxy requires the following dependencies:
 To run the Proxy, follow these steps:
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/ddu72/PI
    ```
 
 2. Define the environment variables:
+
    ```bash
    export PROXY_SERVER_PORT={proxy_port}
    export PROXY_SERVER_CONFIG={proxy_config}
@@ -47,11 +49,12 @@ To run the Proxy, follow these steps:
 3. Install the required packages:
    ```bash
     pip install -r environments/proxy_requirements.txt
-    ```
+   ```
 4. Run the Proxy:
-    ```bash
-     python app_proxy
-     ```
+
+   ```bash
+    python app_proxy
+   ```
 
 5. The Proxy will start listening for requests from the clients and forwarding them to the available servers.
 
@@ -71,34 +74,36 @@ The Proxy server configuration file should be in the following format:
 
 ```json
 {
-    "heartbeatInterval": 10,
-    "heartbeatTimeout": 5,
-    "servers": [
-        {
-            "priority": 0,
-            "name": "tts@container1",
-            "address": "server_container1",
-            "port": 50051,
-            "load": 0.5
-        },
-        {
-            "priority": 1,
-            "name": "tts@container2",
-            "address": "server_container2",
-            "port": 50051,
-            "load": 0.3
-        },
-        {
-            "priority": 2,
-            "name": "tts@container3",
-            "address": "server_container3",
-            "port": 50051,
-            "load": 0.2
-        }
-    ]
+  "heartbeatInterval": 10,
+  "heartbeatTimeout": 5,
+  "servers": [
+    {
+      "priority": 0,
+      "name": "tts@container1",
+      "address": "server_container1",
+      "port": 50051,
+      "load": 0.5
+    },
+    {
+      "priority": 1,
+      "name": "tts@container2",
+      "address": "server_container2",
+      "port": 50051,
+      "load": 0.3
+    },
+    {
+      "priority": 2,
+      "name": "tts@container3",
+      "address": "server_container3",
+      "port": 50051,
+      "load": 0.2
+    }
+  ]
 }
 ```
+
 #### Proxy Server Configuration
+
 ##### Heartbeat Interval
 
 The `heartbeatInterval` is the time interval in seconds at which the Proxy server will send heartbeat messages to the servers to check their availability.
@@ -110,6 +115,7 @@ The `heartbeatTimeout` is the time in seconds after which the Proxy server will 
 ##### Servers
 
 The `servers` array contains the list of available servers with the following attributes:
+
 - `priority`: The priority of the server. The Proxy will distribute the requests based on the server's priority.
 - `name`: The name of the server.
 - `address`: The IP address or hostname of the server.
@@ -119,3 +125,4 @@ The `servers` array contains the list of available servers with the following at
 #### Note
 
 The load balancing is not implemented in the current version of the Proxy. The servers are selected based on their priority only.
+

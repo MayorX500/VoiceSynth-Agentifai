@@ -7,37 +7,38 @@ The frontend is the user interface of the application. It is responsible for ren
 The frontend requires the following:
 
 - ENV: The environment variables must be defined in the `.env` file or as environment variables. The following variables must be defined:
-    - `PORT`: The port on which the frontend will run.
-    - `REACT_APP_API_IP_PORT`: The port of the API server.
-    - `REACT_APP_API_IP_ADDRESS`: The address of the API server.
+
+  - `PORT`: The port on which the frontend will run.
+  - `REACT_APP_API_IP_PORT`: The port of the API server.
+  - `REACT_APP_API_IP_ADDRESS`: The address of the API server.
 
 - Dependencies: The frontend requires the following dependencies:
-    - [Node.js](https://nodejs.org/en/)
-    - [npm](https://www.npmjs.com/get-npm)
-    - [axios](https://www.npmjs.com/package/axios)
-    - [react-audio-player](https://www.npmjs.com/package/react-audio-player)
+  - [Node.js](https://nodejs.org/en/)
+  - [npm](https://www.npmjs.com/get-npm)
+  - [axios](https://www.npmjs.com/package/axios)
+  - [react-audio-player](https://www.npmjs.com/package/react-audio-player)
 
 ### Usage
 
 To run the frontend, you can do the following:
 
 1. Define the api address and port in the `.env` file or as an environment variable. The serve port can also be defined. For example:
-    ```bash
-    export PORT=3000
-    export REACT_APP_API_IP_PORT=5000
-    export REACT_APP_API_IP_ADDRESS={api_address}
-    ```
+   ```bash
+   export PORT=3000
+   export REACT_APP_API_IP_PORT=5000
+   export REACT_APP_API_IP_ADDRESS={api_address}
+   ```
 2. Install the required dependencies by running:
-    ```bash
-    cd app
-    npm install
-    ```
+   ```bash
+   cd app
+   npm install
+   ```
 3. Start the frontend by running:
-    ```bash
+   `bash
     cd app
     npm start
-    ```
-The frontend will be available at `http://localhost:3000`.
+    `
+   The frontend will be available at `http://localhost:3000`.
 
 ### Comunication
 
@@ -49,8 +50,8 @@ The frontend sends a POST request to the API with the text to be synthesized. Th
 
 ```json
 {
-    "text":"O exame de Época Especial realiza-se no dia 10 de Julho, às 9:00, na sala Ed.2 1.03.",
-    "language":"pt"
+  "text": "O exame de Época Especial realiza-se no dia 10 de Julho, às 9:00, na sala Ed.2 1.03.",
+  "language": "pt"
 }
 ```
 
@@ -71,5 +72,3 @@ The frontend is composed of only one page, which contains the text input and the
 ![Frontend Waiting](../images/frontend/frontend_sent.png)
 
 ![Frontend With Audio Player](../images/frontend/frontend_audio.png)
-
-
