@@ -13,7 +13,7 @@
 - [Moisés Antunes](https://github.com/MoisesA14)
 - [Telmo Maciel](https://github.com/telmomaciel9)
 
-## A better version of the Documentation can be found [here](https://ddu72.github.io/PI24/)
+## A better version of the Documentation can be found [here](https://mayorx500.github.io/VoiceSynth-Agentifai/)
 
 ## Description
 
